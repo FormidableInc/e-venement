@@ -89,16 +89,16 @@ Sample Response
         "total": 7,
         "_links": {
             "self": {
-                "href": "\/api\/v1\/events\/?page=1&limit=4"
+                "href": "\/api\/v2\/events\/?page=1&limit=4"
             },
             "first": {
-                "href": "\/api\/v1\/events\/?page=1&limit=4"
+                "href": "\/api\/v2\/events\/?page=1&limit=4"
             },
             "last": {
-                "href": "\/api\/v1\/events\/?page=2&limit=4"
+                "href": "\/api\/v2\/events\/?page=2&limit=4"
             },
             "next": {
-                "href": "\/api\/v1\/events\/?page=2&limit=4"
+                "href": "\/api\/v2\/events\/?page=2&limit=4"
             }
         },
         "_embedded": {
