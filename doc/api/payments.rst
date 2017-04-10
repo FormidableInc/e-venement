@@ -71,7 +71,7 @@ Sample Response
         "createdAt":"2017-04-07T12:42:02Z",
         "_links":{
             "order":{
-                "href":"\/api\/v1\/orders\/21"
+                "href":"\/api\/v2\/orders\/21"
             }
         }
     }
@@ -127,16 +127,16 @@ Sample Response
         "total":20,
         "_links":{
             "self":{
-                "href":"\/api\/v1\/payments\/?page=1&limit=2"
+                "href":"\/api\/v2\/payments\/?page=1&limit=2"
             },
             "first":{
-                "href":"\/api\/v1\/payments\/?page=1&limit=2"
+                "href":"\/api\/v2\/payments\/?page=1&limit=2"
             },
             "last":{
-                "href":"\/api\/v1\/payments\/?page=10&limit=2"
+                "href":"\/api\/v2\/payments\/?page=10&limit=2"
             },
             "next":{
-                "href":"\/api\/v1\/payments\/?page=2&limit=2"
+                "href":"\/api\/v2\/payments\/?page=2&limit=2"
             }
         },
         "_embedded":{
@@ -149,7 +149,7 @@ Sample Response
                     "state":"completed",
                     "_links":{
                         "order":{
-                            "href":"\/api\/v1\/orders\/21"
+                            "href":"\/api\/v2\/orders\/21"
                         }
                     }
                 },
@@ -161,7 +161,7 @@ Sample Response
                     "state":"completed",
                     "_links":{
                         "order":{
-                            "href":"\/api\/v1\/orders\/22"
+                            "href":"\/api\/v2\/orders\/22"
                         }
                     }
                 },
