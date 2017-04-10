@@ -69,7 +69,7 @@ Exemplary Response
 .. code-block:: json
 
 
-{
+  {
     "id":3,
     "translations":{
         "en_US":{
@@ -79,4 +79,4 @@ Exemplary Response
         }
     },
     "value":8.00
-}
+  }
