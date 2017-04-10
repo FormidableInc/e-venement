@@ -133,7 +133,7 @@ To create a new cart for the ``shop@example.com`` user with the ``en_US`` locale
 
 .. code-block:: bash
 
-    $ curl http://demo.sylius.org/api/v2/cart/ \
+    $ curl http://e-venement.local/api/v2/cart/ \
         -H "Authorization: Bearer SampleToken" \
         -H "Content-Type: application/json" \
         -X POST \
@@ -183,7 +183,7 @@ Example
 
 .. code-block:: bash
 
-    $ curl http://demo.sylius.org/api/v1/carts/ \
+    $ curl http://e-venement.local/api/v1/carts/ \
         -H "Authorization: Bearer SampleToken" \
         -H "Content-Type: application/json" \
         -X POST
@@ -482,9 +482,6 @@ Sample Response
         }
     }
 .. tip::
-
-    In Sylius the prices are stored as an integers (``1059`` represents ``10.59$``).
-    So in order to present a proper amount to the end user, you should divide price by 100 by default.
 
 Updating a Cart Item
 --------------------
