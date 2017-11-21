@@ -364,6 +364,12 @@ class ticketActions extends sfActions
     $this->redirect('ticket/show?id='.$ticket->id);
   }
   
+  protected function printOrder($data)
+  {
+    $pdf = new liPDFPlugin($this->getPartial('order_pdf', $data));
+    return $pdf->getPDF();
+  }
+  
   // returns how many tickets exist for a contact on a metaevent for given price names
   protected function createTransactionForm($excludes = array(), $parameters = null)
   {
