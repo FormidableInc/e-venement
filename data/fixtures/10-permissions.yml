@@ -1726,11 +1726,6 @@ sfGuardGroupPermission:
     Permission: sfGuardPermission_36
     created_at: '2013-09-16 14:15:00'
     updated_at: '2013-09-16 14:15:00'
-  sfGuardGroupPermission_31_79:
-    Group: sfGuardGroup_31
-    Permission: sfGuardPermission_79
-    created_at: '2017-11-23 11:45:00'
-    updated_at: '2017-11-23 11:45:00'
   sfGuardGroupPermission_28_90:
     Group: sfGuardGroup_28
     Permission: sfGuardPermission_90
