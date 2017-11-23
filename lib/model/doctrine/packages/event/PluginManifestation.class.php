@@ -97,16 +97,16 @@ abstract class PluginManifestation extends BaseManifestation implements liMetaEv
         if ( $sf_user->getContact() )
           $this->Applicant = $sf_user->getContact();
         else
-          throw new liBookingException('User %%name%% is not linked to any contact, and does not have the %%credential%% credential', array('%%name%%' => (string)$sf_user, '%%credential%%' => self::$credentials['contact_id']));
+          throw new liBookingException(__('User %%name%% is not linked to any contact, and does not have the %%credential%% credential', array('%%name%%' => (string)$sf_user, '%%credential%%' => self::$credentials['contact_id'])));
       }
       
-      if ( !$sf_user->hasCredential(self::$credentials['access_all']) && $this->contact_id !== $sf_user->getContactId() )
-        throw new liBookingException('The current user %%name%% cannot access manifestations which does not belong to itself', array('%%name%%' => (string)$sf_user));
+      if ( !$sf_user->hasCredential(self::$credentials['access_all']) && $this->contact_id != $sf_user->getContactId() )
+        throw new liBookingException(__('The current user %%name%% cannot access manifestations which does not belong to itself', array('%%name%%' => (string)$sf_user)));
     
       if ( sfContext::hasInstance()
         && $this->reservation_confirmed
         && !sfContext::getInstance()->getUser()->hasCredential(self::$credentials['reservation_confirmed'])
-        && sfContext::getInstance()->getUser()->getContactId() !== $this->contact_id )
+        && sfContext::getInstance()->getUser()->getContactId() != $this->contact_id )
       {
         $this->reservation_confirmed = false;
         sfContext::getInstance()->getUser()->setFlash('notice', __('You do not have the credential to confirm any manifestation.'));
