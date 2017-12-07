@@ -16,4 +16,24 @@ class PluginHoldTable extends Doctrine_Table
     {
         return Doctrine_Core::getTable('PluginHold');
     }
+    
+    public function createQuery($alias = 'e')
+    {
+      $q = parent::createQuery($alias);
+      
+      if ( !sfContext::hasInstance() || !sfContext::getInstance()->getActionName() )
+        $q->leftJoin("$alias.Translation ht");
+      elseif (!( sfContext::hasInstance()
+        && sfContext::getInstance()->getActionName()
+        && in_array(sfContext::getInstance()->getActionName(), array('edit', 'update'))
+      ))
+      {
+        $culture = sfContext::hasInstance() ? sfContext::getInstance()->getUser()->getCulture() : 'fr';
+        $q->leftJoin("$alias.Translation ht WITH ht.lang = '$culture'");
+      }
+      else
+        $q->leftJoin("$alias.Translation ht");
+      
+      return $q;
+    }
 }
