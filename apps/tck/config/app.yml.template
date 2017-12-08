@@ -50,6 +50,7 @@ all:
     control_left: false
     #type: boca  # can be boca, tsp700
     foreign_price: PART
+    foreign_max_items: 10
     max_size:
       event_name: 30
       event_shortname: 40
