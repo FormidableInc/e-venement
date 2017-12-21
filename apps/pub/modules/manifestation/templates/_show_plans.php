@@ -26,8 +26,8 @@
 <div id="plans" data-manifestation-id="<?php echo $manifestation->id ?>" class="gauge">
 <?php foreach ( $plans as $plan ): ?>
 <?php if ( isset($plan['seated_plan']) && $plan['seated_plan'] instanceof SeatedPlan ): ?>
+  <?php include_partial('global/magnify') ?>
   <div class="plan-<?php echo $plan['seated_plan']->id ?> gauge">
-    <?php include_partial('global/magnify') ?>
     <?php echo $plan['seated_plan']->render($plan['gauges'], array(
       'app' => sfContext::getInstance()->getConfiguration()->getApplication(),
       'get-seats' => 'seats/index',
