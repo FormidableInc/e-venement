@@ -57,13 +57,13 @@ class sfGuardUserActions extends autoSfGuardUserActions
   {
     $this->restrictGiveSuperAdminFlag($request);
     parent::executeNew($request);
-    $this->restrictViewSuperAdminFlag();
+    $this->restrictVisualPermissions();
   }
   public function executeCreate(sfWebRequest $request)
   {
     $this->restrictGiveSuperAdminFlag($request);
     parent::executeCreate($request);
-    $this->restrictViewSuperAdminFlag();
+    $this->restrictVisualPermissions();
   }
   public function executeUpdate(sfWebRequest $request)
   {
