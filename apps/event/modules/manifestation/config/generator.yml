@@ -52,7 +52,7 @@ generator:
         list_groups: { label: Groups }
       list:
         display: [happens_at, _list_dates, _list_event, _list_contact, _list_location <?php $reservation = sfConfig::get('app_manifestation_reservations',array()); if ( isset($reservation['enable']) && $reservation['enable'] ): ?>, _list_booking_list, reservation_description<?php endif ?>, duration_h_r, _list_age_min, _list_gauge, _list_description<?php if ( sfConfig::get('app_manifestation_extra_informations_enable',true) ): ?>, _list_extra_informations_list<?php endif ?>, _list_best_free_seat, _list_groups]
-        sort: [happens_at, asc]
+        sort: ['happens_at, id', asc]
         table_method: <?php echo $museum ? 'retrieveMuseumList' : 'retrieveList' ?><?php echo PHP_EOL ?>
         title: <?php echo $museum ? 'Periods' : 'Manifestations' ?><?php echo PHP_EOL ?>
         object_actions:
