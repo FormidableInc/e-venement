@@ -1,0 +1,48 @@
+FROM debian:latest
+
+RUN apt-get update
+
+RUN apt-get install -y apt-transport-https lsb-release ca-certificates git curl wget build-essential g++ unzip net-tools lsof dnsutils
+
+RUN echo "deb http://ftp.debian.org/debian $(lsb_release -sc)-backports main" >> /etc/apt/sources.list && apt-get update
+RUN wget -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg && echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/php.list && apt-get update
+
+ARG PHPVER=5.6
+RUN apt-get install -y php${PHPVER} php${PHPVER}-cli php${PHPVER}-pgsql php${PHPVER}-mysql php${PHPVER}-curl php${PHPVER}-json php${PHPVER}-gd php${PHPVER}-mcrypt php${PHPVER}-intl php${PHPVER}-sqlite3 php${PHPVER}-gmp php${PHPVER}-geoip php${PHPVER}-mbstring php${PHPVER}-redis php${PHPVER}-xml php${PHPVER}-zip
+
+RUN echo "memory_limit=-1" >> /etc/php/${PHPVER}/cli/conf.d/42-memory-limit.ini
+RUN echo "date.timezone=Europe/Paris" >>  /etc/php/${PHPVER}/cli/conf.d/68-date-timezone.ini
+
+
+RUN apt-get install -y postgresql-client
+
+ENV HOME=/home/jenkins
+ENV USER=jenkins
+ENV GROUP=users
+
+ARG UID=1004
+RUN useradd -d $HOME -g $GROUP -u ${UID} -m $USER
+
+RUN mkdir -p $HOME/bin && chown -R $USER:$GROUP $HOME
+
+USER $USER:$GROUP
+WORKDIR $HOME
+
+ENV PATH=$PATH:$HOME/bin
+
+# ARG is ENV but only for build (not keep when run)
+ARG eveVer=v2.10
+ARG postgresHost=172.17.0.1
+ARG postgresRootUser=postgres
+ARG postgresRootPassword=postgres24
+ARG postgresAppDb=evenement
+ARG postgresAppUser=evenement
+ARG postgresAppPassword=v2
+ARG eveAdminEmail=heavy@eve.fr
+ARG eveAdminUser=heavy
+ARG eveAdminPassword=42
+
+# Todo check if user already exist before add in .pgpass
+RUN echo '*:5432:*:'${postgresRootUser}':'${postgresRootPassword} >> ${HOME}/.pgpass
+RUN echo '*:5432:*:'${postgresAppUser}':'${postgresAppPassword} >> ${HOME}/.pgpass
+RUN chmod 600 ${HOME}/.pgpass
