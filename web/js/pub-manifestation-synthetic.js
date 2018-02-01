@@ -52,8 +52,11 @@ $(document).ready(function(){
   });
   
   // drag-scroll from any device for seated-plans
-  if ( $('#plans .gauge').length > 0 )
-      $('#plans .gauge').overscroll();
+  if ( !LI.isMobile.any() ) {
+      if ( $('#plans .gauge').length > 0 ) {
+          $('#plans .gauge').overscroll();
+      }
+  }
   
   // modifying quantities in categories
   $('#categories .qty a').click(function(){

@@ -23,6 +23,7 @@ class ContactEntryByContactForm extends BaseContactEntryForm
         ->select('e.*')
         ->andWhere('g.workspace_id IN (SELECT gw.workspace_id FROM GroupWorkspace gw)'),
       'order_by' => array('translation.name', ''),
+      'multiple' => true,
     ));
     $this->validatorSchema['event_id'] = new sfValidatorDoctrineChoice(array(
       'model' => 'Event',
@@ -103,14 +104,11 @@ class ContactEntryByContactForm extends BaseContactEntryForm
     if ( !$entry )
     {
       $entry = new Entry;
-      $entry->event_id = $this->values['event_id'];
-      $event = Doctrine::getTable('Event')->retrieveList()
+      $entry->Event = Doctrine::getTable('Event')->retrieveList()
         ->andWhere('g.workspace_id IN (SELECT gw.workspace_id FROM GroupWorkspace gw)')
-        ->andWhere('e.id = ?', $entry->event_id)
+        ->andWhere('e.id = ?', $this->values['event_id'])
         ->fetchOne();
     }
-    else
-      $event = $entry->Event;
     
     if ( $entry->ManifestationEntries->count() == 0 && $entry->Event->Manifestations->count() > 0 )
     foreach ( $entry->Event->Manifestations as $manif )

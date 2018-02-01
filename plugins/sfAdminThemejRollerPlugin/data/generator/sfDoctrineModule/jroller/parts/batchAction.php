@@ -33,14 +33,17 @@
       $ids = $validator->clean($ids);
 
       // execute batch
-      $this->$method($request);
+      $r = $this->$method($request);
     }
     catch (sfValidatorError $e)
     {
       $this->getUser()->setFlash('error', 'A problem occurs when deleting the selected items as some items do not exist anymore.');
     }
 
-    $this->redirect('@<?php echo $this->getUrlForAction('list') ?>');
+    if ( !$r ) {
+      $this->redirect('@<?php echo $this->getUrlForAction('list') ?>');
+    }
+    return $r;
   }
 
   protected function executeBatchDelete(sfWebRequest $request)

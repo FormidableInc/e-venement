@@ -50,6 +50,7 @@ all:
     control_left: false
     #type: boca  # can be boca, tsp700
     foreign_price: PART
+    foreign_max_items: 10
     max_size:
       event_name: 30
       event_shortname: 40
@@ -64,6 +65,8 @@ all:
     authorize_grouped_tickets: false
     #simplified_printing: false     # for dematerialized ticketting only, cf. web/css/print-simplified-tickets.css & web/private/print-simplified-tickets.css
                                     # incompatible with RFID
+    #pdf_options:                  # Options from lib/vendor/externals/composer/vendor/knplabs/knp-snappy/src/Knp/Snappy/Pdf.php
+    #  orientation: portrait
     #merge: vertical # horizontal: merge tickets by manifestations | vertical: merge tickets by DirectContact, depends on 'simplified_printing: true'
     #alert_on_notprinted: true
     #auto_integrate: true

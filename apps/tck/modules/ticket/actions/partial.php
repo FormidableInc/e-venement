@@ -39,7 +39,7 @@
     ->leftJoin('tck.Gauge tckg')
     ->leftJoin('tck.Transaction t')
     ->andWhere('t.id = ?',$this->transaction_id)
-    ->andWhere('tck.id NOT IN (SELECT tck2.duplicating FROM Ticket tck2 WHERE tck2.duplicating IS NOT NULL)')
+    ->andWhere('tck.id NOT IN (SELECT tck2.duplicating FROM Ticket tck2 WHERE tck2.duplicating IS NOT NULL) AND tck.id NOT IN (SELECT tt2.cancelling FROM ticket tt2 WHERE tt2.cancelling IS NOT NULL)')
     ->andWhere('tck.cancelling IS NULL')
     ->andWhere('tck.price_id IS NOT NULL')
     ->orderBy('m.happens_at, et.name, tck.price_name, tck.id');

@@ -1,0 +1,115 @@
+pipeline {
+    agent {
+        dockerfile {
+            filename "etc/dockerfile.jenkins"
+            args '--network=ci.network'
+        }
+    }
+
+    environment {
+        RND = "${BUILD_NUMBER}_${BRANCH_NAME}"
+        postgresHost = "postgres.host"
+        postgresRootUser = "postgres"
+        postgresRootPassword = "postgres24"
+        postgresAppDb = "evenement"
+        postgresAppUser = "evenement"
+        postgresAppPassword = "v2"
+        eveAdminEmail = "heavy@eve.fr"
+        eveAdminUser = "heavy"
+        eveAdminPassword = "42"
+    }
+
+    options {
+        timeout(time: 1, unit: 'HOURS')
+        timestamps()
+    }
+
+    stages {
+    	stage ('Where Am I') {
+            steps {
+                sh "uname -a"
+                sh "php -v"
+            }
+        }
+
+        stage ('Get Sub Module') {
+            steps {
+                sh "git submodule init"
+                sh "git submodule update"
+                sh 'for i in plugins/sfDependencyInjectionPlugin lib/vendor/externals/symfony1; do if [ -d $i ]; then  cd lib/vendor/externals/symfony1 && git checkout master && cd -; fi; done'
+                /* not need for master : sh "git submodule foreach --recursive git submodule update --init" */
+            }
+        }
+
+        stage ('Create Config From Template') {
+            steps {
+                sh 'for i in config/autoload.inc.php config/databases.yml config/project.yml; do if [ -f ${i}.template ]; then  cp ${i}.template $i; fi; done'
+                sh 'for i in $(find apps -name "*.template") ; do cp ${i} $(echo ${i} | sed -e s/.template$//); done'
+            }
+        }
+
+        stage ('Create Postgres Database And User') {
+            steps {
+                sh "psql -w -c \"DROP DATABASE IF EXISTS ${postgresAppDb};\" -U ${postgresRootUser} -h ${postgresHost}"
+                sh "psql -w -c \"DROP ROLE IF EXISTS ${postgresAppUser};\" -U ${postgresRootUser} -h ${postgresHost}"
+                sh "psql -w -c \"CREATE USER ${postgresAppUser} WITH PASSWORD '${postgresAppPassword}';\" -U ${postgresRootUser} -h ${postgresHost}"
+                sh "psql -w -c \"ALTER ROLE ${postgresAppUser} WITH CREATEDB;\" -U ${postgresRootUser} -h ${postgresHost}"
+                sh "psql -w -c \"CREATE DATABASE ${postgresAppDb};\" -U ${postgresRootUser} -h ${postgresHost}"
+                sh "psql -w -c \"ALTER DATABASE ${postgresAppDb} OWNER TO ${postgresAppUser};\" -U ${postgresRootUser} -h ${postgresHost}"
+                sh "psql -w -c 'CREATE EXTENSION \"uuid-ossp\";' -U ${postgresRootUser} -d ${postgresAppDb} -h ${postgresHost}"
+            }
+        }
+
+        stage ('Update Database Host In Config') {
+            steps {
+                sh "sed -i config/databases.yml -e s/localhost/${postgresHost}/"
+            }
+        }
+
+        stage ('Create Database Structure') {
+            steps {
+                sh "./symfony doctrine:build --all --application=default --no-confirmation"
+                sh "sed -i config/doctrine/functions-pgsql.sql -e s/'DROP AGGREGATE sum'/'DROP AGGREGATE IF EXISTS sum'/"
+                sh "cat  config/doctrine/functions-pgsql.sql"
+                sh "psql -w -U ${postgresAppUser} -d ${postgresAppDb} -h ${postgresHost} -f config/doctrine/functions-pgsql.sql"
+            }
+        }
+
+        stage ('Load Fixture') {
+            steps {
+                sh "./symfony guard:create-user ${eveAdminEmail} ${eveAdminUser} ${eveAdminPassword}"
+                sh "./symfony guard:promote ${eveAdminUser}"
+                sh "./symfony doctrine:data-load --append data/fixtures/10-permissions.yml"
+                /* Disable as not need and take a lot of time
+                sh "./symfony doctrine:data-load --append data/fixtures/20-postalcodes.yml"
+                sh "./symfony doctrine:data-load --append data/fixtures/50-geo-fr-districts.yml"
+                sh "./symfony doctrine:data-load --append data/fixtures/50-geo-fr-dpt+regions.yml"
+                */
+                sh "./symfony doctrine:data-load --append data/fixtures/60-generic-data.yml"
+                sh "./symfony doctrine:data-load --append data/fixtures/61-type-of-relationships.yml"
+            }
+        }
+
+        stage ('Try Cache Clear') {
+            steps {
+                sh "./symfony cc"
+            }
+        }
+
+        stage ('Archive Gzip') {
+            steps {
+                sh 'tar -czf E-venement_${BRANCH_NAME}.tgz ./*'
+                archiveArtifacts artifacts: "E-venement_${BRANCH_NAME}.tgz", fingerprint: true
+            }
+        }
+
+
+    }
+
+    post {
+        always {
+            cleanWs()
+        }
+    }
+
+}

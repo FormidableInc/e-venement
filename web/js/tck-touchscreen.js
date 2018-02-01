@@ -290,7 +290,12 @@ $(document).ready(function(){
       });
     }
     else
+    {
       $('#li_transaction_field_informations .vcard').slideDown('slow');
+      
+      if ( callback ) 
+        callback();
+    }
 
     // show the contact's file if the screen width is wide enough
     if ( $('#sf_admin_container').width() > 1400 && $('#li_transaction_field_contact_id .data a').length > 0 )

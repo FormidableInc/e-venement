@@ -53,10 +53,10 @@ class pricesActions extends sfActions
     $criterias = $this->getUser()->getAttribute('stats.criterias',array(),'admin_module');
     $dates['from'] = isset($criterias['dates']) && $criterias['dates']['from']['day'] && $criterias['dates']['from']['month'] && $criterias['dates']['from']['year']
       ? strtotime($criterias['dates']['from']['year'].'-'.$criterias['dates']['from']['month'].'-'.$criterias['dates']['from']['day'])
-      : strtotime('- 1 weeks');
+      : strtotime('- 1 weeks 00:00:00' );
     $dates['to']   = isset($criterias['dates']) && $criterias['dates']['to']['day'] && $criterias['dates']['to']['month'] && $criterias['dates']['to']['year']
       ? strtotime($criterias['dates']['to']['year'].'-'.$criterias['dates']['to']['month'].'-'.$criterias['dates']['to']['day'].' 23:59:59')
-      : strtotime('+ 3 weeks + 1 day');
+      : strtotime('+ 3 weeks + 1 day 23:59:59');
     $criterias['dates'] = $dates;
     if ( isset($criterias['users']) && count($criterias['users']) > 0 )
     {

@@ -77,6 +77,7 @@ class ProductFormFilter extends BaseProductFormFilter
     return parent::getFields() + array(
       'name' => 'Name',
       'code' => 'Code',
+      'short_name' => 'ShortName'
     );
   }
   
@@ -111,6 +112,16 @@ class ProductFormFilter extends BaseProductFormFilter
       return $q;
     
     $q->andWhere('pt.name ILIKE ?', $value['text'].'%');
+    if ( $this->user )
+      $q->andWhere('pt.lang = ?', $this->user->getCulture());
+    
+    return $q;
+  }
+  public function addShortNameColumnQuery($q, $field, $value) {
+    if ( !$value['text'] )
+      return $q;
+    
+    $q->andWhere('pt.short_name ILIKE ?', $value['text'].'%');
     if ( $this->user )
       $q->andWhere('pt.lang = ?', $this->user->getCulture());
     

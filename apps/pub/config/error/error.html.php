@@ -22,11 +22,12 @@
 ***********************************************************************************/
 ?>
 <?php
-$configuration = ProjectConfiguration::getApplicationConfiguration('pub', 'prod', false);
+$app = sfContext::getInstance()->getConfiguration()->getApplication();
+$configuration = ProjectConfiguration::getApplicationConfiguration($app, 'prod', false);
 
 $context = sfContext::createInstance($configuration);
 $context->getConfiguration()->loadHelpers(array('CrossAppLink','I18N'));
 
 $context->getUser()->setFlash('error',__('An error occurred, please contact %%contact%%',array('%%contact%%' => sfConfig::get('app_informations_email','webdev@libre-informatique.fr'))));
-$context->getResponse()->setHttpHeader('Location',cross_app_url_for('pub','homepage'));
+$context->getResponse()->setHttpHeader('Location',cross_app_url_for($app,'homepage'));
 $context->getResponse()->sendHttpHeaders();

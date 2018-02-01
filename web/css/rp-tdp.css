@@ -205,6 +205,7 @@ body #content { width: auto; }
 #tdp-content .sf_admin_list_td_list_transactions .ordered a { text-decoration: underline; }
 #tdp-content .sf_admin_list_td_list_transactions .not-printed:not(.ordered), #tdp-content .sf_admin_list_td_list_transactions .not-printed:not(.ordered) a { color: silver; }
 #tdp-content .sf_admin_list_td_groups_picto .professional { opacity: 0.3; }
+.mod-contact #tdp-content .tdp-organism_category_id.sf_admin_form_field_organism_category_id {display: none;}
 @media screen and (min-width: 1820px) {
 #tdp-content .sf_admin_list_th_organisms_list, #tdp-content .sf_admin_list_td_organisms_list,
 #tdp-content .sf_admin_list_td_groups_picto .professional,

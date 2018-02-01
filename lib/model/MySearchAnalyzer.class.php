@@ -46,7 +46,7 @@ class MySearchAnalyzer extends Doctrine_Search_Analyzer_Utf8
   
   public static $cutchars = array(
           '@',
-          '.',',','?','!','¡','¿',';',
+          '.',',','?','!','¡','¿',';','—',
           '♠','♣','♥','♦',
           '-','+',
           '←','↑','→','↓',

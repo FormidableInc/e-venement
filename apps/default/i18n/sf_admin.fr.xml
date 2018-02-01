@@ -365,6 +365,10 @@
         <source>The option has been successfully modified.</source>
         <target>l'option a été correctement modifiée.</target>
       </trans-unit>
+      <trans-unit id="89">
+        <source>Send Confirmation Emails</source>
+        <target>Envoyer les emails de confirmation</target>
+      </trans-unit>      
     </body>
   </file>
 </xliff>

@@ -4,6 +4,9 @@ select { max-width: 300px; max-height: 150px; }
 body #sf_admin_container { position: static; }
 body #content .sf_admin_action_list { margin-left: 42px; }
 
+.mod-email #content .sf_admin_form select { width: 300px; }
+.mod-email #content .sf_admin_form input[type=text]:not([size]) { width: 300px; }
+
 #content .sf_admin_form select, #content .sf_admin_form textarea,
 #content .sf_admin_form input[type=text]:not([size]) { width: 250px; }
 

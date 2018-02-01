@@ -38,7 +38,7 @@ $(document).ready(function(){
   class="tickets <?php if ( in_array($gauge->id,$sf_data->getRaw('errors')) ) echo 'overbooked' ?>"
 >
   <?php if ( sfConfig::get('app_options_synthetic_plans', false) ): ?>
-  <td class="picture"><?php echo $event->Picture->getRawValue()->render(array('app' => 'pub')) ?></td>
+  <td class="picture"><?php echo $event->Picture->getRawValue()->render(array('app' => sfContext::getInstance()->getConfiguration()->getApplication())) ?></td>
   <td class="event">
     <p><?php echo $event ?></p>
     <p><?php echo $manif->getFormattedDate() ?></p>
@@ -47,7 +47,7 @@ $(document).ready(function(){
     <?php include_partial('manifestation/show_named_tickets', array('manifestation' => $manif, 'ticket' => $ticket, 'transaction' => $transaction, 'display_continue' => false, 'display_mods' => false)) ?>
   </td>
   <?php else: ?>
-  <td class="picture"><?php echo $event->Picture->getRawValue()->render(array('app' => 'pub')) ?></td>
+  <td class="picture"><?php echo $event->Picture->getRawValue()->render(array('app' => sfContext::getInstance()->getConfiguration()->getApplication())) ?></td>
   <td class="event"><?php if ( $last['event_id'] != $event->id ) { $last['event_id'] = $event->id; echo $event; } ?></td>
   <td class="manifestation"><?php if ( $last['manifestation_id'] != $manif->id ) { $last['manifestation_id'] = $manif->id; echo $manif->getFormattedDate(); } ?></td>
   <?php endif ?>

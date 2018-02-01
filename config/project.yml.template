@@ -12,6 +12,8 @@ all:
     #pdf:
     #  width: 145mm  -> 155mm is usually a good value for boca printers
     #  height: 60mm
+    #pdf_options:                  # Options from lib/vendor/externals/composer/vendor/knplabs/knp-snappy/src/Knp/Snappy/Pdf.php
+    #  orientation: landscape
   about:
     nowarranty: false
     client:

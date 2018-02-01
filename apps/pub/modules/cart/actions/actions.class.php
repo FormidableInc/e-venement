@@ -152,7 +152,7 @@ class cartActions extends sfActions
   public function executeCgv(sfWebRequest $request) {
       $this->form = new sfForm;
       $this->getContext()->getConfiguration()->loadHelpers('I18N');
-      $this->getResponse()->setTitle(__('Terms & Conditions').' - ');
+      $this->getResponse()->setTitle(__('Terms & Conditions').' - ', false);
       
       $this->form->url = pubConfiguration::getText('app_texts_terms_conditions_url');     
   }

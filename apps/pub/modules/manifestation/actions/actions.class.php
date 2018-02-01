@@ -49,7 +49,7 @@ class manifestationActions extends autoManifestationActions
 
     parent::executeIndex($request);
 
-    $this->getResponse()->setTitle($event.' - ');
+    $this->getResponse()->setTitle($event.' - ', false);
 
     // focusing on member card pending tickets
     $transaction = $this->getUser()->getTransaction();
@@ -187,7 +187,7 @@ class manifestationActions extends autoManifestationActions
       }
     }
     
-    $this->getResponse()->setTitle($this->manifestation->Event.' - ');
+    $this->getResponse()->setTitle($this->manifestation->Event.' - ', false);
     
     if ( strtotime('now + '.sfConfig::get('app_tickets_close_before','36 hours')) > strtotime($this->manifestation->happens_at) )
       return 'Closed';

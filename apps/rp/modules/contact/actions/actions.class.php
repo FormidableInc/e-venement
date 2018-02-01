@@ -591,8 +591,8 @@ class contactActions extends autoContactActions
 
     $contacts = array();
     foreach ( $request as $contact )
-      $contacts[$contact->id] = (string) $contact;
-
+      $contacts[$contact->id] = (string)($contact.' - '.$contact->email) ;
+     
     $this->contacts = $contacts;
   }
 

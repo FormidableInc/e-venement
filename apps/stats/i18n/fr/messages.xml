@@ -477,8 +477,8 @@
         <target>Prix unitaire:</target>
       </trans-unit>
       <trans-unit>
-        <source>Memberships-like from %%from%% to %%to%%</source>
-        <target>Équivalents-abonnements du %%from%% au %%to%%</target>
+        <source>Membercard creation from %%from%% to %%to%%</source>
+        <target>Créations de cartes d'abonnement du %%from%% au %%to%%</target>
       </trans-unit>
       <trans-unit>
         <source>free_subscription</source>

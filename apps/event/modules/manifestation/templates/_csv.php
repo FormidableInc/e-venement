@@ -48,6 +48,7 @@
       'total_value'   => __('Value'),
       'transaction'   => __('Transaction'),
       'accounting'    => __('Acc.'),
+      'tickets'       => __('Tickets'),
     ));
     break;
   case 'manifestations_list':

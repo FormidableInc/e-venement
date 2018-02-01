@@ -106,6 +106,7 @@
       
       // tickets infos
       $total = array('qty' => 0, 'value' => 0);
+      $ticket_ids = array();
       foreach ( $spectator->Tickets as $ticket )
       if ( !$ticket->contact_id || $ticket->contact_id == $spectator->contact_id )
       {
@@ -113,6 +114,9 @@
         $this->lines[count($this->lines)-1]['price_'.$ticket->price_id.'_value'] += $ticket->value;
         $total['qty']++;
         $total['value'] += $ticket->value;
+                
+        // Ticket ids
+        $ticket_ids[] = '#' . $ticket->id;
       }
       else
         $tickets[] = $ticket;
@@ -121,6 +125,8 @@
       $this->lines[count($this->lines)-1]['total_value']  = $total['value'];
       $this->lines[count($this->lines)-1]['accounting']   = $spectator->Invoice->count() > 0 ? '#'.$spectator->Invoice[0]->id : '';
       $this->lines[count($this->lines)-1]['transaction']  = '#'.$spectator->id;
+      sort($ticket_ids);
+      $this->lines[count($this->lines)-1]['tickets'] = implode(' ', $ticket_ids);
     }
     
     // the tickets with a direct contact embedded
@@ -145,6 +151,9 @@
       // & co
       $this->lines[count($this->lines)-1]['accounting']   = '';
       $this->lines[count($this->lines)-1]['transaction']  = '#'.$ticket->transaction_id;
+
+      // Ticket ids
+      $this->lines[count($this->lines)-1]['tickets'] = '#' . $ticket->id;
     }
     
     // adding the last "total" line
@@ -187,6 +196,7 @@
         'total_qty',
         'total_value',
         'accounting',
+        'tickets'
       )),
     );
   }

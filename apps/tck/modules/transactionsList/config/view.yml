@@ -1,6 +1,6 @@
 all:
   stylesheets: [tck-transactions-list]
-  javascripts: [tck-transactions-list, list-scroll, helper]
+  javascripts: [tck-transactions-list, helper]
 showJson:
   has_layout: false
   http_metas:

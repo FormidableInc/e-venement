@@ -2,7 +2,7 @@
 #categories ul { padding: 5px; list-style-type: none; }
 #categories .category { width: 125px; text-overflow: ellipsis; overflow: hidden; display: block; white-space: nowrap; }
 #categories .prices { width: 15em; font-size: 100%; }
-#categories .qty input { width: 1.5em; font-size: 100%; text-align: center; }
+#categories .qty input { width: 2.5em; font-size: 100%; text-align: center; }
 #categories .qty a { text-decoration: none; border: 1px solid gray; padding: 0px 4px; margin: 0 -1px; border-radius: 2px; cursor: default; font-family: monospace; }
 
 #plans .gauge .magnify { display: block; right: 35px; }
@@ -47,8 +47,8 @@
 #container .tab { margin-left: 0; width: 100%; position: static; }
 }
 
-/* < 480px */
-@media screen and (max-width: 480px) {
+/* < 768px */
+@media screen and (max-device-width: 768px) {
 #container h4, #container #plans { display: none; }
 #container #categories.hidden .li-content { visibility: visible; height: auto; margin-top: 17px; }
 }

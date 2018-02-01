@@ -9,8 +9,15 @@
     <?php if ( file_exists($path = sfConfig::get('sf_web_dir').'/private/print-accounting.css') ): ?>
     <style><?php require($path) ?></style>
     <?php endif ?>
-    <script type="text/javascript" src="/js/jquery.js"></script>
-    <script type="text/javascript" src="/js/print-tickets.js"></script>
+    <?php
+      foreach ( ['/js/jquery.js', '/js/print-tickets.js'] as $js  => $opt )
+      {
+        if ( file_exists($file = $_SERVER['DOCUMENT_ROOT'].preg_replace('/\\?.*$/', '', $opt)) )
+        {
+          echo '<script type="text/javascript" data-orig="'.$js.'">'.file_get_contents($file).'</script>'."\n";
+        }
+      }
+    ?>
   </head>
   <body class="pdf">
     <div id="content">

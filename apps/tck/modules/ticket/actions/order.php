@@ -77,11 +77,10 @@
     // if everything's ok, prints out the order
     if ( $request->hasParameter('pdf') )
     {
-      $pdf = new sfDomPDFPlugin();
-      $pdf->setInput($this->getPartial('order_pdf', $this->data));
+      $pdf = $this->printOrder($this->data);
       $this->getResponse()->setContentType('application/pdf');
       $this->getResponse()->setHttpHeader('Content-Disposition', 'attachment; filename="order-'.$this->order->id.'.pdf"');
-      return $this->renderText($pdf->execute());
+      return $this->renderText($pdf);
     }
     
     if ( $request->hasParameter('email') )
@@ -89,10 +88,10 @@
       $this->getContext()->getConfiguration()->loadHelpers(array('CrossAppLink','I18N'));
       $sf_user = $this->getUser()->getGuardUser();
       
-      $pdf = new liPDFPlugin($this->getPartial('order_pdf', $this->data));
+      $pdf = $this->printOrder($this->data);
       $file = new Picture;
       $file->name = 'db:'.($fname = 'order-'.$this->order->id.'-'.date('YmdHis').'-'.rand(0,9999).'.pdf');
-      $file->content = base64_encode($raw = $pdf->getPDF());
+      $file->content = base64_encode($pdf);
       $file->type = 'application/pdf';
       $file->save();
       
@@ -100,7 +99,7 @@
       $attachment->original_name = $fname;
       $attachment->filename = $file->name;
       $attachment->mime_type = $file->type;
-      $attachment->size = strlen($raw);
+      $attachment->size = strlen($pdf);
       
       $email = new Email;
       $email->field_subject = __('Your order for transaction #%%tid%%', array('%%tid%%' => $this->transaction->id), 'li_accounting');

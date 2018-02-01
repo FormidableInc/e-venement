@@ -136,6 +136,8 @@ $(document).ready(function(){
       evt.remove();
     });
     
+    arr.sort();
+
     // adding a class depending on current month on every event
     $('.sf_admin_list tbody .sf_admin_row').each(function(){
       var month = $(this).find('.sf_admin_list_td_month .month').clone().removeClass('month').prop('class');
@@ -143,10 +145,11 @@ $(document).ready(function(){
     });
     
     // reordering globally using the event's month (class added recently)
+    var prev = $('.sf_admin_list tbody .meta-event-row:first');
     $.each(arr, function(i, month){
-      var first = $('.sf_admin_list tbody .sf_admin_row.'+month+':first');
-      $('.sf_admin_list tbody .sf_admin_row.'+month+':not(:first)').each(function(){
-        $(this).insertAfter(first);
+      $('.sf_admin_list tbody .sf_admin_row.'+month).each(function(){
+        $(this).insertAfter(prev);
+        prev = $(this);
       });
     });
     

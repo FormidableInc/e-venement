@@ -36,7 +36,7 @@
     <input class="file" type="file" name="file" data-post-url="<?php echo url_for($sf_context->getModuleName().'/newPicture') ?>" />
     <div class="current">
       <?php if ( $contact->picture_id ): ?>
-        <?php echo $contact->getRawValue()->Picture->render(array('app' => 'pub')) ?>
+        <?php echo $contact->getRawValue()->Picture->render(array('app' => sfContext::getInstance()->getConfiguration()->getApplication())) ?>
       <?php else: ?>
         <img src="" alt="" />
       <?php endif ?>

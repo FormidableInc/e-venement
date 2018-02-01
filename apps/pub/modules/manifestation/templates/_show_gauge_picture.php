@@ -13,7 +13,7 @@
       <?php echo $sp->getRaw('Picture')->getHtmlTag(array(
         'title' => $sp->Picture,
         'width' => $sp->ideal_width,
-        'app'   => 'pub',
+        'app'   => sfContext::getInstance()->getConfiguration()->getApplication(),
       )) ?>
     </a>
     <a href="<?php echo url_for('ticket/addSeat?id='.$gauge->id) ?>" class="add-seat"></a>
@@ -23,7 +23,7 @@
   <?php else: ?>
   <div class="picture">
     <p><a href="#" onclick="javascript: $(this).closest('.picture').find('.seated-plan').slideToggle('medium'); $(this).toggleClass('opened'); return false;"><?php echo __('Display venue') ?></a></p>
-    <p class="seated-plan"><?php echo $sp->getRawValue()->OnlinePicture->getHtmlTag(array('app' => 'pub', 'title' => $gauge->Workspace)) ?></p>
+    <p class="seated-plan"><?php echo $sp->getRawValue()->OnlinePicture->getHtmlTag(array('app' => sfContext::getInstance()->getConfiguration()->getApplication(), 'title' => $gauge->Workspace)) ?></p>
   </div>
   <?php endif ?>
 <?php endif ?>

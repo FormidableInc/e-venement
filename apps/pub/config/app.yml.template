@@ -8,7 +8,7 @@ all:
     #template: public # sets the default template file to use, without the ".php" extension
                       # if you need to use multiple layouts for multiple stores, use app_options_specific_template in the controler (eg: pub.php & pub_dev.php)
     plugins: []       # add your plugins here, especially OnlinePayment plugins...
-    pass_price_first: true
+    pass_price_first: false
     #synthetic_plans: false   # for online seating for real
     #home: meta_event
     #manifestations_lists_as_select: false
@@ -104,6 +104,7 @@ all:
     site: "1999888"
     key: "0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF"
     currency: '<?php $cur = sfConfig::get('project_internals_currency', array('iso' => 978, 'symbol' => '€')); echo $cur['iso'] ?>'
+    #entity: "0" # In case of multiple instance using the same paybox account, you can specify an account number.     
     url:
       payment: [https://preprod-tpeweb.paybox.com/, https://preprod-tpeweb1.paybox.com/]
       uri: cgi/MYchoix_pagepaiement.cgi

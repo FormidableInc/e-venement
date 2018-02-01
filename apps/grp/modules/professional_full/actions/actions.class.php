@@ -47,14 +47,25 @@ class professional_fullActions extends autoProfessional_fullActions
   }
   public function executeCreate(sfWebRequest $request)
   {
-    $this->form = new ContactEntryByContactForm;
-    $this->form->restoreProfessionalId();
-    $this->form->bind($request->getParameter('contact_entry_new'));
-    if ( $this->form->isValid() )
-    {
-      $this->form->save();
-      $this->getUser()->setFlash('success', 'The item was created successfully.');
-      $this->redirect('professional_full/edit?id='.$this->form->getObject()->Professional->id);
+    $data = $request->getParameter('contact_entry_new');
+    $uri = false;
+    
+    foreach ( $data['event_id'] as $event_id ) {
+        $this->form = new ContactEntryByContactForm;
+        $this->form->restoreProfessionalId();
+        $tmp = $data;
+        $tmp['event_id'] = $event_id;
+        $this->form->bind($tmp);
+        if ( $this->form->isValid() )
+        {
+          $this->form->save();
+          $this->getUser()->setFlash('success', 'The item was created successfully.');
+          $uri = 'professional_full/edit?id='.$this->form->getObject()->Professional->id;
+        }
+    }
+    
+    if ( $uri ) {
+        $this->redirect($uri);
     }
     
     $this->getUser()->setFlash('error', 'The item has not been saved due to some errors.');

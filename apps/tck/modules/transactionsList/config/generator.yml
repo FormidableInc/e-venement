@@ -33,6 +33,9 @@ generator:
           _printTickets:
             label: Print tickets
             credentials: [tck-print-ticket]
+          _sendEmails:
+            label: Send Confirmation Emails
+            credentials: [tck-transaction]            
         object_actions:
           _showUp:
             action: show

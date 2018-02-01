@@ -58,17 +58,14 @@ class cardsActions extends sfActions
       $until = date('Y-m-d',strtotime('1 year'));
     
     // SQL query
-    $q = "SELECT mct.name, SUM(
-            EXTRACT(epoch FROM CASE WHEN :until::date >= expire_at::date THEN expire_at::date ELSE :until::date END)
-            -
-            EXTRACT(epoch FROM CASE WHEN expire_at::date - '1 year'::interval >= :from::date THEN (expire_at::date - '1 year'::interval)::date ELSE :from::date END)
-          )/60/60/24 AS nb
+    $q = "SELECT mct.name, count(*) AS nb
           FROM member_card mc
-          LEFT JOIN member_card_type mct ON mct.id = mc.member_card_type_id
-          WHERE (expire_at::date - '1 year'::interval <= :from AND expire_at::date >= :from::date OR expire_at::date >= :until AND expire_at::date - '1 year'::interval <= :until::date)
-            AND active
-          GROUP BY name
-          ORDER BY name";
+          INNER JOIN member_card_type mct ON mct.id = mc.member_card_type_id
+          WHERE mc.created_at BETWEEN :from AND :until
+          AND mc.contact_id IS NOT NULL
+          GROUP BY mct.name
+          ORDER BY mct.name
+        ";
     
     $pdo = Doctrine_Manager::getInstance()->getCurrentConnection()->getDbh();
     $stmt = $pdo->prepare($q);

@@ -139,9 +139,9 @@ class emailActions extends autoEmailActions
     $r = parent::executeEdit($request);
     
     // if object has been sent, cannot be modified again
-    if ( !$this->email->sent )
-      $this->form->removeAlreadyKnownReceipientsList();
-    else
+    if ( $this->email->sent )
+    //  $this->form->removeAlreadyKnownReceipientsList();
+   // else
       $this->setTemplate('show');
     
     return $r;
@@ -151,7 +151,7 @@ class emailActions extends autoEmailActions
     $email = $request->getParameter('email');
     $this->email = $this->getRoute()->getObject();
     $this->form = $this->configuration->getForm($this->email);
-    $this->form->removeAlreadyKnownReceipientsList();
+    //$this->form->removeAlreadyKnownReceipientsList();
         
     if ($request->getParameter('email-send-button')) {
       $this->email->isATest(false);
@@ -276,7 +276,7 @@ class emailActions extends autoEmailActions
     //$this->form->setDefault('contacts_list',$contacts_list);
     //$this->form->setDefault('professionals_list',$professionals_list);
     //$this->form->setDefault('organisms_list',$organisms_list);
-    $this->form->removeAlreadyKnownReceipientsList();
+    //$this->form->removeAlreadyKnownReceipientsList();
     
     return $r;
   }

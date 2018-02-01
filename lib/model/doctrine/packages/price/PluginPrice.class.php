@@ -22,6 +22,13 @@ abstract class PluginPrice extends BasePrice
     return strtolower(get_class($this));
   }
 
+  public function preSave($event)
+  {
+    $this->name = trim($this->name);
+    
+    parent::preSave($event);
+  }
+
   public function postInsert($event)
   {      
     $this->rank = $this->id;
