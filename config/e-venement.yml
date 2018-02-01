@@ -59,7 +59,7 @@ all:
       displays:
         star: [{ pnpId: "VID_0519+PID_0007" }]
       epts:
-        ingenico: [{ pnpId: "VID_079B&PID_0028" }]
+        ingenico: [{ pnpId: "usb-079b_0028-if00" }]
     exec_path:
       cupsfilter: /usr/sbin/cupsfilter
       base64: /usr/bin/base64
