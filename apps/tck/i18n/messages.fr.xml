@@ -2120,6 +2120,70 @@
         <source>Updated by</source>
         <target>Modifié par</target>
       </trans-unit>
+      <trans-unit id="529">
+        <source>From %%from%% to %%to%%</source>
+        <target>De %%from%% à %%to%%</target>
+      </trans-unit>
+      <trans-unit id="530">
+        <source>Edit Member card price model</source>
+        <target>Modification du modèle de carte d'abonnement</target>
+      </trans-unit>                       
+      <trans-unit id="531">
+        <source>View Payment method</source>
+        <target>Fiche de méthode de paiement</target>
+      </trans-unit>                       
+      <trans-unit id="532">
+        <source>[0]No transaction needed to be confirmed|[1]1 transaction has been confirmed by email to its backer|(1,+Inf]%%nb%% transactions have been confirmed by email to their backers</source>
+        <target>[0]Aucune confirmation n'a été nécessaire|[1]Une opération a été confirmée par courriel à son commanditaire|(1,+Inf]%%nb%% opérations ont été confirmées par courriel à leur commanditaires</target>
+      </trans-unit>                       
+      <trans-unit id="533">
+        <source>Program #%%tid%%</source>
+        <target>Programme #%%tid%%</target>
+      </trans-unit>                       
+      <trans-unit id="534">
+        <source>List of transactions to be confirmed by email</source>
+        <target>Liste des opérations à confirmer par email</target>
+      </trans-unit>  
+      <trans-unit id="535">
+        <source>You must enter a postal code before printing the ticket(s).</source>
+        <target>Vous devez saisir un code postal avant d'imprimer le(s) billet(s).</target>
+      </trans-unit>
+      <trans-unit id="536">
+        <source>The membercard "%%mc%%" is not valid for the event "%%event%%".</source>
+        <target>La carte "%%mc%%" n'est pas valable pour l'évènement "%%event%%".</target>
+      </trans-unit>         
+      <trans-unit id="537">
+        <source>The membercard "%%mc%%" does not exist.</source>
+        <target>La carte d'abonnement "%%mc%%" n'existe pas.</target>
+      </trans-unit>         
+      <trans-unit id="538">
+        <source>Auto-seat</source>
+        <target>Placer auto</target>
+      </trans-unit>         
+      <trans-unit id="539">
+        <source>Auto-seat tickets of selected gauge</source>
+        <target>Placer automatiquement les billets de la jauge sélectionnée</target>
+      </trans-unit>         
+      <trans-unit id="540">
+        <source>Last user</source>
+        <target>Dernier utilisateur</target>
+      </trans-unit>    
+      <trans-unit id="541">
+        <source>[0]No ticket seated!|[1]1 ticket seated.|(1,+Inf]%%d%% tickets seated.</source>
+        <target>[0]Pas de billet placé !|[1]1 billet placé.|(1,+Inf]%%d%% billets placés.</target>
+      </trans-unit>         
+      <trans-unit id="542">
+        <source>Tickets must be printed or integrated before sending them.</source>
+        <target>Les billets doivent être imprimés ou intégrés avant envoi.</target>
+      </trans-unit>  
+      <trans-unit id="543">
+        <source>The membercard "%%mc%%" is no longer valid.</source>
+        <target>La carte d'abonnement "%%mc%%" n'est plus valide.</target>
+      </trans-unit>  
+      <trans-unit id="544">
+        <source>EPT: transaction aborted</source>
+        <target>Transaction non aboutie</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

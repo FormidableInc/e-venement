@@ -24,7 +24,6 @@ if ( LI === undefined )
   var LI = {};
 
 $(document).ready(function () {
-
   var connector = new EveConnector('https://localhost:8164', function () {
     // *T* here we are after the websocket first connection is established
     getAvailableUsbDevices().then(getAvailableSerialDevices).then(function(){
@@ -365,6 +364,7 @@ $(document).ready(function () {
       alert('Wrong amount'); // TODO: translate this
       return false;
     }
+
     var transaction_id = $("#transaction_close_id").val().trim();
     if ( ! transaction_id ) {
       alert('Transaction ID not found'); // TODO: translate this
@@ -374,20 +374,25 @@ $(document).ready(function () {
     // replace new payment form by EPT transaction message
     toggleEPTtransaction();
     
-    // Find out if we need to wait for the EPT transaction end 
+    // Find out if we need to wait for the EPT transaction end
     var wait = ( LI.ept_wait_transaction_end !== undefined ) ? LI.ept_wait_transaction_end : false;
     // Send the amount to the EPT
     EPT.sendAmount(amount, {wait: wait}).then(function(res){
       connector.log('info', res);
+
+      var errorMessage = $('.js-i18n[data-source="ept_failure"]').data('target');      
+
       if ( res.status === 'accepted' || res.status === 'handled')
         $('#li_transaction_field_payment_new form').submit();
         // TODO: check integrity (pos, amount, currency) and read priv and rep fields
-      else
-        alert('EPT: payment failure'); // TODO: translate this
+      else {
+        alert(errorMessage);
+      }
+
       toggleEPTtransaction();      
     }).catch(function(err){
       connector.log('error', err);
-      alert('EPT: payment failure'); // TODO: translate this
+      alert(errorMessage);
       toggleEPTtransaction();      
     });
 
