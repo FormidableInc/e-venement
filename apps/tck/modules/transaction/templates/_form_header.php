@@ -1,0 +1,1 @@
+<div class="js-i18n" data-source="ept_failure" data-target="<?php echo __('EPT: transaction aborted') ?>"></div>
