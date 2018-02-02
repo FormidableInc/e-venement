@@ -95,14 +95,14 @@ pipeline {
                 sh "./symfony cc"
             }
         }
-
+        /*
         stage ('Archive Gzip') {
             steps {
                 sh 'tar -czf E-venement_${BRANCH_NAME}.tgz ./*'
                 archiveArtifacts artifacts: "E-venement_${BRANCH_NAME}.tgz", fingerprint: true
             }
         }
-
+        */
 
     }
 
