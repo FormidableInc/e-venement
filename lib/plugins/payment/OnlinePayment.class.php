@@ -43,7 +43,7 @@
         && isset($currency['conversions'][$_POST['currency']]) && isset($currency['conversions'][$_POST['currency']]['rate']) )
       {
         $cur = $_POST['currency'];
-        $this->value = $this->value * $currency['conversions'][$_POST['currency']]['rate'];
+        $this->value = round($this->value * $currency['conversions'][$_POST['currency']]['rate'], 2);
       }
       $this->currency = $cur;
     }
