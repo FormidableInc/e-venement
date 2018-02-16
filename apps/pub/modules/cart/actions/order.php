@@ -22,27 +22,34 @@
 ***********************************************************************************/
 ?>
 <?php
-    if ( !($this->getUser()->getTransaction() instanceof Transaction) )
-      return $this->redirect('@homepage');
-    
-    $this->dispatcher->notify(new sfEvent($this, 'pub.transaction_before_ordering', array(
-      'transaction' => $this->getUser()->getTransaction(),
-      'user' => $this->getUser(),
-    )));
-    
     // if it is a pay-only process
     $tid = intval($request->getParameter('transaction_id')).'' === ''.$request->getParameter('transaction_id','')
       ? $request->getParameter('transaction_id')
       : false;
-    $this->transaction = $tid ? Doctrine::getTable('Transaction')->find($tid) : $this->getUser()->getTransaction();
 
-    if ( $this->transaction->contact_id != $this->getUser()->getTransaction()->contact_id
-      && $request->getParameter('token','') !== md5($this->transaction->id.'|*|*|'.sfConfig::get('project_eticketting_salt', 'e-venement')) )
+    $token = $request->getParameter('token','');
+
+    if ( $tid && $token == md5($tid.'|*|*|'.sfConfig::get('project_eticketting_salt', 'e-venement')) )
+    {
+      $this->transaction = Doctrine::getTable('Transaction')->find($tid);
+      $this->getUser()->setTransaction($this->transaction);
+    }
+    else
+    {
       $this->transaction = $this->getUser()->getTransaction();
-    
-    // harden data
-    if ( $this->transaction->id == $this->getUser()->getTransactionId() )
-      $this->getContext()->getConfiguration()->hardenIntegrity();
+      
+      if ( !($this->getUser()->getTransaction() instanceof Transaction) )
+        return $this->redirect('@homepage');
+      
+      $this->dispatcher->notify(new sfEvent($this, 'pub.transaction_before_ordering', array(
+        'transaction' => $this->getUser()->getTransaction(),
+        'user' => $this->getUser(),
+      )));
+
+      // harden data
+      if ( $this->transaction->id == $this->getUser()->getTransactionId() )
+        $this->getContext()->getConfiguration()->hardenIntegrity();
+    }
     
     try { $this->form = new ContactPublicForm($this->getUser()->getContact()); }
     catch ( liEvenementException $e )
@@ -287,7 +294,7 @@
       $this->getContext()->getConfiguration()->loadHelpers('I18N');
       $this->getUser()->setFlash('success', $str = __('You are about to complete your order, please fill in those surveys before...'));
       error_log('Transaction #'.$this->getUser()->getTransactionId().': '.$str);
-      $this->redirect('cart/surveys');
+      $this->redirect('cart/surveys?transaction_id=' . $this->transaction->id . '&token=' . $token);
     }
     
     // setting up the vars to commit to the bank
