@@ -7,7 +7,8 @@ pipeline {
     }
 
     environment {
-        RND = "${BUILD_NUMBER}_${BRANCH_NAME}"
+        Version = sh(returnStdout: true, script: 'git describe --tags').trim()
+        Tag = sh(returnStdout: true, script: 'git describe --tags --abbrev=0').trim()
         postgresHost = "postgres.host"
         postgresRootUser = "postgres"
         postgresRootPassword = "postgres24"
@@ -22,6 +23,7 @@ pipeline {
     options {
         timeout(time: 1, unit: 'HOURS')
         timestamps()
+        disableConcurrentBuilds()
     }
 
     stages {
@@ -95,14 +97,13 @@ pipeline {
                 sh "./symfony cc"
             }
         }
-        /*
+
         stage ('Archive Gzip') {
             steps {
-                sh 'tar -czf E-venement_${BRANCH_NAME}.tgz ./*'
-                archiveArtifacts artifacts: "E-venement_${BRANCH_NAME}.tgz", fingerprint: true
+                sh 'tar -czf Eve_${Version}.tgz ./*'
+                archiveArtifacts artifacts: "Eve_${Version}.tgz", fingerprint: true
             }
         }
-        */
 
     }
 
