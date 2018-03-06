@@ -111,6 +111,10 @@ pipeline {
         always {
             cleanWs()
         }
+
+        success {
+            build job: 'Copy Artifact', parameters: [string(name: 'Job', value: "${JOB_NAME}"), string(name: 'Project', value: "E-venement"), string(name: 'Branch', value: "${BRANCH_NAME}")], wait: false
+        }
     }
 
 }
