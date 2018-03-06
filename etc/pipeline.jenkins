@@ -7,8 +7,10 @@ pipeline {
     }
 
     environment {
+        /* Not working in multi branch pipeline
         Version = sh(returnStdout: true, script: 'git describe --tags').trim()
         Tag = sh(returnStdout: true, script: 'git describe --tags --abbrev=0').trim()
+        */
         postgresHost = "postgres.host"
         postgresRootUser = "postgres"
         postgresRootPassword = "postgres24"
@@ -100,8 +102,8 @@ pipeline {
 
         stage ('Archive Gzip') {
             steps {
-                sh 'tar -czf Eve_${Version}.tgz ./*'
-                archiveArtifacts artifacts: "Eve_${Version}.tgz", fingerprint: true
+                sh 'tar -czf Eve_${BRANCH_NAME}.tar.gz ./*'
+                archiveArtifacts artifacts: "*.tar.gz", fingerprint: true
             }
         }
 
@@ -116,5 +118,4 @@ pipeline {
             build job: 'Copy Artifact', parameters: [string(name: 'Job', value: "${JOB_NAME}"), string(name: 'Project', value: "E-venement"), string(name: 'Branch', value: "${BRANCH_NAME}")], wait: false
         }
     }
-
 }
