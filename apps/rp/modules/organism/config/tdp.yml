@@ -100,7 +100,7 @@ all:
           extra_hidden_fields: [contact_id, organism_id]
       side_properties:
         Ticketting:
-          credentials: tck-overview
+          credentials: tck-reports
           partial: global/tdp/side_widget_object_events
         Groups:
           credentials: pr-group
