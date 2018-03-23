@@ -31,7 +31,7 @@
       <span class="price"><?php echo format_normal_currency($ticket->value,$sf_context->getConfiguration()->getCurrency()) ?></span>
     </p>
     <p class="price_name"><span class="description"><?php echo $ticket->Price->description ?></span><span class="name"><?php echo $ticket->price_name ?></span> <span class="price"><?php echo format_normal_currency($ticket->value,$sf_context->getConfiguration()->getCurrency()) ?></span></p>
-    <p class="price_vat"><span class="description"><?php echo $ticket->Manifestation->Vat->value*100 ?>&nbsp;%</span> - <span class="value"><?php echo format_normal_currency($ticket->value*$ticket->Manifestation->Vat->value,$sf_context->getConfiguration()->getCurrency()) ?></span></p>
+    <p class="price_vat"><span class="description"><?php echo $ticket->Manifestation->Vat->value*100 ?>&nbsp;%</span> - <span class="value"><?php echo format_normal_currency($ticket->value - $ticket->value / (1 + $ticket->Manifestation->Vat->value), $sf_context->getConfiguration()->getCurrency()) ?></span></p>
     <p class="event"><?php echo mb_strlen($buf = (string)$ticket->Manifestation->Event) > $maxsize['event_name'] ? mb_substr(nl2br($buf),0,$maxsize['event_name']).'...' : nl2br($buf) ?></p>
     <p class="event-short"><?php echo mb_strlen($buf = $ticket->Manifestation->Event->short_name) > $maxsize['event_shortname'] ? mb_substr($buf,0,$maxsize['event_shortname']).'...' : $buf ?></p>
     <p class="event-subtitle">
@@ -112,7 +112,7 @@
       <span class="price"><?php echo format_normal_currency($ticket->value,$sf_context->getConfiguration()->getCurrency()) ?></span>
     </p>
     <p class="price_name"><span class="name"><?php echo $ticket->price_name ?></span> <span class="price"><?php echo format_normal_currency($ticket->value,$sf_context->getConfiguration()->getCurrency()) ?></span></p>
-    <p class="price_vat"><span class="description"><?php echo $ticket->Manifestation->Vat->value*100 ?>&nbsp;%</span><span class="value"><?php echo format_normal_currency($ticket->value*$ticket->Manifestation->Vat->value,$sf_context->getConfiguration()->getCurrency()) ?></span></p>
+    <p class="price_vat"><span class="description"><?php echo $ticket->Manifestation->Vat->value*100 ?>&nbsp;%</span><span class="value"><?php echo format_normal_currency($ticket->value - $ticket->value / (1 + $ticket->Manifestation->Vat->value), $sf_context->getConfiguration()->getCurrency()) ?></span></p>
     <p class="spectator">
       <?php if ( $ticket->contact_id ): ?>
         <?php echo $ticket->DirectContact ?>
