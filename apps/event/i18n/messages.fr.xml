@@ -1840,7 +1840,7 @@ Attention cet outil a une limite : il ne fonctionne bien qu'avec les lots de pla
       </trans-unit>
       <trans-unit id="459">
         <source>Extra description:</source>
-        <target>Description suppl.:</target>
+        <target>Description complète:</target>
       </trans-unit>
       <trans-unit id="460">
         <source>Meta Event</source>
@@ -1848,7 +1848,7 @@ Attention cet outil a une limite : il ne fonctionne bien qu'avec les lots de pla
       </trans-unit>
       <trans-unit id="461">
         <source>Extra specification:</source>
-        <target>Description suppl.:</target>
+        <target>Description complète:</target>
       </trans-unit>
       <trans-unit id="462">
         <source>Category</source>
@@ -1908,11 +1908,11 @@ Attention cet outil a une limite : il ne fonctionne bien qu'avec les lots de pla
       </trans-unit>
       <trans-unit id="476">
         <source>Extra description</source>
-        <target>Description suppl.</target>
+        <target>Description complète</target>
       </trans-unit>
       <trans-unit id="477">
         <source>Extra specification</source>
-        <target>Spécification suppl.</target>
+        <target>Présentation courte</target>
       </trans-unit>
       <trans-unit id="478">
         <source>Image URL</source>
