@@ -4,8 +4,8 @@
   <?php use_javascript('photobooth') ?>
   <?php use_javascript('rp-picture-upload?'.date('Ymd')) ?>
   <div class="current">
-    <a href="<?php echo url_for($sf_context->getModuleName().'/delPicture?id='.$object->id) ?>" target="_blank">x</a>
     <?php if ( $object->picture_id ): ?>
+      <a href="<?php echo url_for($sf_context->getModuleName().'/delPicture?id='.$object->id) ?>" target="_blank">x</a>
       <?php echo $object->Picture->getRawValue()->render() ?>
     <?php else: ?>
       <img alt="" src="" />
