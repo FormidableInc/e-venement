@@ -1,3 +1,9 @@
+- v2.12.4 - 17/04/2018
+  - #5425 - Add a webservice to control tickets and membercards
+  - #5841 - Improve some translations
+  - #5976 - Fix a bug when using a saved filter
+  - #6157 - Fix a bug when caluculating vat on tickets
+  - #5961 - Fix a bug with organism credentials when displaying tickets
 - v2.12.3 - 13/03/2018
   - #5828 - Fix a bug when validating an address in online sale
   - #5947 - Fix a bug when controlling a paybox signature
