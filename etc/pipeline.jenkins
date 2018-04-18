@@ -7,26 +7,11 @@ pipeline {
         }
     }
 
-    environment {
-        /* Not working in multi branch pipeline
-        Version = sh(returnStdout: true, script: 'git describe --tags').trim()
-        Tag = sh(returnStdout: true, script: 'git describe --tags --abbrev=0').trim()
-        */
-        postgresHost = "postgres.host"
-        postgresRootUser = "postgres"
-        postgresRootPassword = "postgres24"
-        postgresAppDb = "evenement"
-        postgresAppUser = "evenement"
-        postgresAppPassword = "v2"
-        eveAdminEmail = "heavy@eve.fr"
-        eveAdminUser = "heavy"
-        eveAdminPassword = "42"
-    }
-
     options {
         timeout(time: 1, unit: 'HOURS')
         timestamps()
         disableConcurrentBuilds()
+        ansiColor('xterm')
     }
 
     stages {
@@ -37,61 +22,44 @@ pipeline {
             }
         }
 
+        stage ('Set Env') {
+            steps {
+                sh './bin/ci-scripts/set_env_with_etcd.sh'
+                sh './bin/ci-scripts/set_pgpass_test.sh'
+                sh 'cat ./.env'
+                sh 'cat $HOME/.pgpass'
+                sh 'cat config/databases.yml'
+            }
+        }
+
         stage ('Get Sub Module') {
             steps {
-                sh "git submodule init"
-                sh "git submodule update"
-                sh 'for i in plugins/sfDependencyInjectionPlugin lib/vendor/externals/symfony1; do if [ -d $i ]; then  cd lib/vendor/externals/symfony1 && git checkout master && cd -; fi; done'
-                /* not need for master : sh "git submodule foreach --recursive git submodule update --init" */
+                sh "./bin/ci-scripts/do_run.sh submodule_init.sh"
             }
         }
 
         stage ('Create Config From Template') {
             steps {
-                sh 'for i in config/autoload.inc.php config/databases.yml config/project.yml; do if [ -f ${i}.template ]; then  cp ${i}.template $i; fi; done'
-                sh 'for i in $(find apps -name "*.template") ; do cp ${i} $(echo ${i} | sed -e s/.template$//); done'
+                sh "./bin/ci-scripts/do_run.sh init_config.sh"
             }
         }
 
-        stage ('Create Postgres Database And User') {
+         stage ('Create Database') {
             steps {
-                sh "psql -w -c \"DROP DATABASE IF EXISTS ${postgresAppDb};\" -U ${postgresRootUser} -h ${postgresHost}"
-                sh "psql -w -c \"DROP ROLE IF EXISTS ${postgresAppUser};\" -U ${postgresRootUser} -h ${postgresHost}"
-                sh "psql -w -c \"CREATE USER ${postgresAppUser} WITH PASSWORD '${postgresAppPassword}';\" -U ${postgresRootUser} -h ${postgresHost}"
-                sh "psql -w -c \"ALTER ROLE ${postgresAppUser} WITH CREATEDB;\" -U ${postgresRootUser} -h ${postgresHost}"
-                sh "psql -w -c \"CREATE DATABASE ${postgresAppDb};\" -U ${postgresRootUser} -h ${postgresHost}"
-                sh "psql -w -c \"ALTER DATABASE ${postgresAppDb} OWNER TO ${postgresAppUser};\" -U ${postgresRootUser} -h ${postgresHost}"
-                sh "psql -w -c 'CREATE EXTENSION \"uuid-ossp\";' -U ${postgresRootUser} -d ${postgresAppDb} -h ${postgresHost}"
-            }
-        }
-
-        stage ('Update Database Host In Config') {
-            steps {
-                sh "sed -i config/databases.yml -e s/localhost/${postgresHost}/"
+                sh "./bin/ci-scripts/do_run.sh create_database_test.sh"
+                sh "./bin/ci-scripts/do_run.sh create_table_test.sh"
             }
         }
 
         stage ('Create Database Structure') {
             steps {
-                sh "./symfony doctrine:build --all --application=default --no-confirmation"
-                sh "sed -i config/doctrine/functions-pgsql.sql -e s/'DROP AGGREGATE sum'/'DROP AGGREGATE IF EXISTS sum'/"
-                sh "cat  config/doctrine/functions-pgsql.sql"
-                sh "psql -w -U ${postgresAppUser} -d ${postgresAppDb} -h ${postgresHost} -f config/doctrine/functions-pgsql.sql"
+                sh "./bin/ci-scripts/do_run.sh install_db_test.sh"
             }
         }
 
         stage ('Load Fixture') {
             steps {
-                sh "./symfony guard:create-user ${eveAdminEmail} ${eveAdminUser} ${eveAdminPassword}"
-                sh "./symfony guard:promote ${eveAdminUser}"
-                sh "./symfony doctrine:data-load --append data/fixtures/10-permissions.yml"
-                /* Disable as not need and take a lot of time
-                sh "./symfony doctrine:data-load --append data/fixtures/20-postalcodes.yml"
-                sh "./symfony doctrine:data-load --append data/fixtures/50-geo-fr-districts.yml"
-                sh "./symfony doctrine:data-load --append data/fixtures/50-geo-fr-dpt+regions.yml"
-                */
-                sh "./symfony doctrine:data-load --append data/fixtures/60-generic-data.yml"
-                sh "./symfony doctrine:data-load --append data/fixtures/61-type-of-relationships.yml"
+                sh "./bin/ci-scripts/do_run.sh load_fixture_test.sh"
             }
         }
 
@@ -103,8 +71,8 @@ pipeline {
 
         stage ('Archive Gzip') {
             steps {
-                sh 'tar -czf Eve_${BRANCH_NAME}.tar.gz ./*'
-                archiveArtifacts artifacts: "*.tar.gz", fingerprint: true
+                sh './bin/ci-scripts/do_run.sh gen_archive.sh'
+                archiveArtifacts artifacts: "*.tar.gz*", fingerprint: true
             }
         }
 

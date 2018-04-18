@@ -1,0 +1,12 @@
+all:
+  doctrine:
+    class: sfDoctrineDatabase
+    param:
+      dsn: 'pgsql:host={{getv "/postgres/hostname"}};dbname={{getv "/postgres/user/dbname"}}'
+      username: {{getv "/postgres/user/username"}}
+      password: {{getv "/postgres/user/password"}}
+task:
+  doctrine:
+    class: sfDoctrineDatabase
+    param:
+      profiler: false
