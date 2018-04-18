@@ -27,4 +27,4 @@ eveAdminPassword="42"
 
 ./symfony doctrine:data-load --append data/fixtures/60-generic-data.yml
 ./symfony doctrine:data-load --append data/fixtures/61-type-of-relationships.yml
-./symfony doctrine:data-load --append data/fixtures/66-country.yml
+# ./symfony doctrine:data-load --append data/fixtures/66-country.yml
