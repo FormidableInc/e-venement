@@ -54,3 +54,5 @@
 
 /.sass-cache/
 /web/.sass-cache/
+
+/.env

@@ -1,0 +1,11 @@
+[template]
+src = "databases.yml.tmpl"
+dest = "config/databases.yml"
+keys = [
+       "/postgres/hostname",
+       "/postgres/root/username",
+       "/postgres/root/password",
+       "/postgres/user/dbname",
+       "/postgres/user/username",
+       "/postgres/user/password",
+]
