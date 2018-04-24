@@ -36,13 +36,13 @@ GeoFrRegion:
     strict_name: NORMANDIE
     slug: normandie
   GeoFrRegion_32:
-    name: Nord-Pas-de-Calais-Picardie
-    strict_name: NORD-PAS-DE-CALAIS-PICARDIE
-    slug: nord-pas-de-calais-picardie
+    name: Hauts-de-France
+    strict_name: HAUTS-DE-FRANCE
+    slug: hauts-de-france
   GeoFrRegion_44:
-    name: Alsace-Champagne-Ardenne-Lorraine
-    strict_name: ALSACE-CHAMPAGNE-ARDENNE-LORRAINE
-    slug: alsace-champagne-ardenne-lorraine
+    name: Grand Est
+    strict_name: GRAND EST
+    slug: grand-est
   GeoFrRegion_52:
     name: 'Pays de la Loire'
     strict_name: 'PAYS DE LA LOIRE'
@@ -52,13 +52,13 @@ GeoFrRegion:
     strict_name: BRETAGNE
     slug: bretagne
   GeoFrRegion_75:
-    name: Aquitaine-Limousin-Poitou-Charentes
-    strict_name: AQUITAINE-LIMOUSIN-POITOU-CHARENTES
-    slug: aquitaine-limousin-poitou-charentes
+    name: Nouvelle-Aquitaine
+    strict_name: NOUVELLE-AQUITAINE
+    slug: nouvelle-aquitaine
   GeoFrRegion_76:
-    name: Languedoc-Roussillon-Midi-Pyrénées
-    strict_name: LANGUEDOC-ROUSSILLON-MIDI-PYRENEES
-    slug: languedoc-rousillon-midi-pyrenees
+    name: Occitanie
+    strict_name: OCCITANIE
+    slug: occitanie
   GeoFrRegion_84:
     name: Auvergne-Rhône-Alpes
     strict_name: AUVERGNE-RHONE-ALPES
