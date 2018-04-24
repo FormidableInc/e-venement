@@ -110,10 +110,14 @@ for ( $i = -1 ; $i < count($options) ; $i++ )
   // contacts
   $transaction->Contact->confirmed = true;        // transaction's contact
   foreach ( $transaction->Tickets as $ticket )    // for "named" tickets
-  if ( $ticket->contact_id )
   {
-    $ticket->DirectContact->confirmed = true;
-    error_log('confirmation of a contact');
+    $ticket->integrated_at = date('Y-m-d H:i:s');
+
+    if ( $ticket->contact_id )
+    {
+      $ticket->DirectContact->confirmed = true;
+      error_log('confirmation of a contact');
+    }
   }
   
   // order
