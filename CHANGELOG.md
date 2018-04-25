@@ -1,3 +1,6 @@
+- v2.12.5 - 25/04/2018
+  - #6255 - Add the integration of tickets online
+  - #6470 - Update region fixture
 - v2.12.4 - 17/04/2018
   - #5425 - Add a webservice to control tickets and membercards
   - #5841 - Improve some translations

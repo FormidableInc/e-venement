@@ -39,7 +39,7 @@ all:
       - Sophie MICHEL
       - Kévin ALLERME
       - #symfony-fr
-    version: 2.12.4 "An Douar Du Minaki"
+    version: 2.12.5 "An Douar Du Minaki"
   internals:
     charset:
       old:    ISO-8859-1
