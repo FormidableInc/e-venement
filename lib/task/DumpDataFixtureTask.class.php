@@ -40,13 +40,16 @@ EOF;
         $this->logSection('Dump', 'Dumping table '.$table_name);
         
         $table = Doctrine::getTable($table_name);
-        $q = $table->createQuery('tn');
+        $q = Doctrine_Query::create()
+          ->from("$table_name tn")
+          ->select('tn.*');
                 
         if ( $table->hasRelation('Translation') ) 
         {
-          $q = $q->leftJoin("tn.Translation ct");
+          $q->leftJoin('tn.Translation ct')
+            ->addSelect('ct.*');
         } 
-
+        
         $results = $q->fetchArray();
         
         $parser->dumpData(array($table_name => $results), sfConfig::get('sf_root_dir').'/data/fixtures/'.$table_name.'.yml');
