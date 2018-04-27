@@ -305,17 +305,18 @@ class ManifestationTable extends PluginManifestationTable
     return $q;
   }
   
-  public function retrieveCurrent()
+  public function getTodayManifestations()
   {
-    $culture = sfContext::hasInstance() ? sfContext::getInstance()->getUser()->getCulture() : 'fr';
-    
+    $sf_user = sfContext::hasInstance() ? sfContext::getInstance()->getUser() : null;
+    $culture = $sf_user ? $sf_user->getCulture() : 'fr';
+
     $past = sfConfig::get('app_control_past') ? sfConfig::get('app_control_past') : '6 hours';
     $future = sfConfig::get('app_control_future') ? sfConfig::get('app_control_future') : '1 day';
     
     $start = date('Y-m-d H:i', strtotime('now + ' . $future));
     $end = date('Y-m-d H:i', strtotime('now - '.$past));
     
-    return Doctrine_Query::create()
+    $q = Doctrine_Query::create()
       ->select('m.id AS manifestation_id, e.id AS event_id, cp.id AS checkpoint_id')
       ->from('Manifestation m')
       ->innerJoin('m.Event e')
@@ -323,7 +324,15 @@ class ManifestationTable extends PluginManifestationTable
       ->innerJoin('e.Checkpoints cp WITH cp.type = ?', 'entrance')
       ->where('m.happens_at < ?', $start)
       ->andWhere('manifestation_ends_at(m.happens_at, m.duration) > ?', $end)
-      ->fetchOne();
+      ->andWhereIn('e.meta_event_id', array_keys($sf_user->getMetaEventsCredentials()))
+    ;
+        
+    return $q;
+  }
+  
+  public function retrieveCurrent()
+  {
+    return $this->getTodayManifestations()->fetchOne();
   }
   
   public function slightlyFindOneById($value)

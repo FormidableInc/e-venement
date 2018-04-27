@@ -42,22 +42,24 @@ class ControlFormFilter extends BaseControlFormFilter
   {
     parent::configure();
     
-    $this->widgetSchema['checkpoint_id']->setOption('query', Doctrine::getTable('Checkpoint')->createQuery('cp')
-      ->innerJoin('cp.Event e')
-      ->andWhereIn('e.meta_event_id',array_keys(sfContext::getInstance()->getUser()->getMetaEventsCredentials()))
-    );
+    $manifestations = Doctrine::getTable('Manifestation')->getTodayManifestations();
+    $mid = $manifestations->execute()->getPrimaryKeys();
+    $this->widgetSchema['checkpoint_id']->setOption('query', Doctrine::getTable('Checkpoint')->getFromManifestations($mid));
+
+    $this->options['query'] = Doctrine::getTable('Control')->createQuery('c')
+      ->leftJoin('c.Ticket tck')
+      ->andWhereIn('tck.manifestation_id', $mid)
+    ;
     
     $this->widgetSchema   ['manifestation_id'] = new sfWidgetFormDoctrineChoice(array(
       'model' => 'Manifestation',
       'add_empty' => true,
-      //'order_by' => array('date',''),
+      'query' => $manifestations
     ));
     $this->validatorSchema['manifestation_id'] = new sfValidatorDoctrineChoice(array(
       'model' => 'Manifestation',
       'required' => false,
     ));
-    
-    $this->options['query'] = Doctrine::getTable('Control')->createListQuery();
   }
   
   public function getFields()
@@ -76,8 +78,7 @@ class ControlFormFilter extends BaseControlFormFilter
     if ( $value )
     {
       $a = $query->getRootAlias();
-      $query->leftJoin("$a.Ticket tck")
-        ->addWhere('tck.manifestation_id = ?',$value)
+      $query->addWhere('tck.manifestation_id = ?',$value)
       ;
     }
     
