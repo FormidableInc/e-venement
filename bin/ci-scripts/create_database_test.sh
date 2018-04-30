@@ -18,16 +18,26 @@ then
     exit 42
 fi
 
-# Check if database exists before drop and re-create
-psql -w -h ${DBHOST} -U ${DBROOTUSER} -lqt | grep -w ${DBAPPUSER} | grep -w ${DBAPPNAME}
-if [ $? -ne 0 ]
-   then
-       psql -w -c "DROP DATABASE IF EXISTS ${DBAPPNAME};" -U ${DBROOTUSER} -h ${DBHOST}
-       psql -w -c "DROP ROLE IF EXISTS ${DBAPPUSER};" -U ${DBROOTUSER} -h ${DBHOST}
-       psql -w -c "CREATE USER ${DBAPPUSER} WITH PASSWORD '${DBAPPPASSWORD}';" -U ${DBROOTUSER} -h ${DBHOST}
-       psql -w -c "ALTER ROLE ${DBAPPUSER} WITH CREATEDB;" -U ${DBROOTUSER} -h ${DBHOST}
-       psql -w -c "CREATE DATABASE ${DBAPPNAME};" -U ${DBROOTUSER} -h ${DBHOST}
-       psql -w -c "ALTER DATABASE ${DBAPPNAME} OWNER TO ${DBAPPUSER};" -U ${DBROOTUSER} -h ${DBHOST}
-       psql -w -c 'CREATE EXTENSION "uuid-ossp";' -U ${DBROOTUSER} -d ${DBAPPNAME} -h ${DBHOST}
+# Check if database exist before drop and re-create
+#psql -w -h ${DBHOST} -U ${DBROOTUSER} -lqt | grep -w ${DBAPPUSER} | grep -w ${DBAPPNAME}
+#if [ $? -ne 0 ]
+#  then
+#psql -w -h ${DBHOST} -c "DROP DATABASE IF EXISTS ${DBAPPNAME};" -U ${DBROOTUSER}
+#psql -w -h ${DBHOST} -c "DROP ROLE IF EXISTS ${DBAPPUSER};" -U ${DBROOTUSER}
+#fi
 
+userexist=$(psql -qt -w -h ${DBHOST} -U ${DBROOTUSER} -c "SELECT rolname FROM pg_catalog.pg_roles WHERE rolname = '${DBAPPUSER}';"|sed -e s/' '//g)
+if [ -z ${userexist} ]
+then
+    psql -w -h ${DBHOST} -c "CREATE USER ${DBAPPUSER} WITH PASSWORD '${DBAPPPASSWORD}';" -U ${DBROOTUSER}
 fi
+psql -w -h ${DBHOST} -c "ALTER ROLE ${DBAPPUSER} WITH CREATEDB;" -U ${DBROOTUSER}
+
+tableexist=$(psql -qt -w -h ${DBHOST} -U ${DBROOTUSER} -c "SELECT datname FROM pg_catalog.pg_database WHERE datname = '${DBAPPNAME}';"|sed -e s/' '//g)
+if [ -z ${tableexist} ]
+then
+    psql -w -h ${DBHOST} -c "CREATE DATABASE ${DBAPPNAME};" -U ${DBROOTUSER}
+fi
+psql -w -h ${DBHOST} -c "ALTER DATABASE ${DBAPPNAME} OWNER TO ${DBAPPUSER};" -U ${DBROOTUSER}
+
+psql -w -h ${DBHOST} -c 'CREATE EXTENSION IF NOT EXISTS "uuid-ossp";' -U ${DBROOTUSER} -d ${DBAPPNAME}

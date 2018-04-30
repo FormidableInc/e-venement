@@ -71,7 +71,7 @@ pipeline {
 
         stage ('Archive Gzip') {
             steps {
-                sh './bin/ci-scripts/do_run.sh gen_archive.sh'
+                sh 'Branch="${BRANCH_NAME}" ./bin/ci-scripts/do_run.sh gen_archive.sh'
                 archiveArtifacts artifacts: "*.tar.gz*", fingerprint: true
             }
         }
@@ -84,7 +84,7 @@ pipeline {
         }
 
         success {
-            build job: 'Copy Artifact', parameters: [string(name: 'Job', value: "${JOB_NAME}"), string(name: 'Project', value: "E-venement"), string(name: 'Branch', value: "${BRANCH_NAME}")], wait: false
+            build job: 'Copy Artifact', parameters: [string(name: 'Job', value: "${JOB_NAME}"), string(name: 'Project', value: "E-venement"), string(name: 'Branch', value: "${BRANCH_NAME}"), string(name: 'DoDeploy', value: "true")], wait: false
         }
     }
 }

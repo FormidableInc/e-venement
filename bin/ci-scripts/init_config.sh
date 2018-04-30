@@ -14,7 +14,7 @@ fi
 
 # todo: get config from confd and/or private repo ?
 
-for i in config/autoload.inc.php config/project.yml
+for i in config/autoload.inc.php config/project.yml config/extra-plugins.php
 do
     if [ -f ${i}.template ]
     then

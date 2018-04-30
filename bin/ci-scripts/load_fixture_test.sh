@@ -13,18 +13,30 @@ else
 fi
 
 #todo: move this in .env or not
-eveAdminEmail="heavy@eve.fr"
-eveAdminUser="heavy"
-eveAdminPassword="42"
+#eveAdminEmail="heavy@eve.fr"
+#eveAdminUser="heavy"
+#eveAdminPassword="42"
 
-./symfony guard:create-user ${eveAdminEmail} ${eveAdminUser} ${eveAdminPassword}
-./symfony guard:promote ${eveAdminUser}
-./symfony doctrine:data-load --append data/fixtures/10-permissions.yml
+#./symfony guard:create-user ${eveAdminEmail} ${eveAdminUser} ${eveAdminPassword}
+#./symfony guard:promote ${eveAdminUser}
+
+optional_data=""
+
+#use prefix number to set order
+for i in data/fixtures/8*.yml
+do
+    optional_data="${optional_data} $(basename $i)"
+done
+
+
+for i in 10-permissions.yml 60-generic-data.yml 61-type-of-relationships.yml 66-country.yml $optional_data
+do
+    if [ -f data/fixtures/$i ]
+       then
+           ./symfony doctrine:data-load --append data/fixtures/$i
+    fi
+done
+
+
 # Disable as not needed and takes a lot of time
-# ./symfony doctrine:data-load --append data/fixtures/20-postalcodes.yml
-# ./symfony doctrine:data-load --append data/fixtures/50-geo-fr-districts.yml
-# ./symfony doctrine:data-load --append data/fixtures/50-geo-fr-dpt+regions.yml
-
-./symfony doctrine:data-load --append data/fixtures/60-generic-data.yml
-./symfony doctrine:data-load --append data/fixtures/61-type-of-relationships.yml
-./symfony doctrine:data-load --append data/fixtures/66-country.yml
+# 20-postalcodes.yml 50-geo-fr-districts.yml 50-geo-fr-dpt+regions.yml
