@@ -58,20 +58,13 @@ class ContactPublicForm extends ContactForm
       ));
     }
     
-    $this->widgetSchema['street_name'] = new sfWidgetFormInput();
-    $this->widgetSchema['street_number'] = new sfWidgetFormInput();
-
-    $this->validatorSchema['street_name']  = new sfValidatorString(array('required' => false));
-    $this->validatorSchema['street_number']  = new sfValidatorString(array('required' => false));
-
-    
     foreach ( array('firstname','address','postalcode','city','email') as $field )
       $this->validatorSchema[$field]->setOption('required', true);
     
     $fields = array(
       'id',
       'title','name','firstname',
-      'country', 'postalcode','city','street_name', 'street_number','address',
+      'country', 'postalcode','city','address',
       'email','phone_type','phone_number',
       'password','password_again',
     );

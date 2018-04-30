@@ -24,10 +24,13 @@ class AddressableForm extends BaseAddressableForm
         $this->validatorSchema[$option->value]->setOption('required', true);
     }
     
-    $this->validatorSchema['address'] = new liValidatorDoctrineGeoFrStreetBase(array(
-      'form'      => $this,
-      'required' => $this->validatorSchema['address']->getOption('required'),
-    ));
+    if ( sfConfig::get('project_rp_street_validation', false) )
+    {
+      $this->validatorSchema['address'] = new liValidatorDoctrineGeoFrStreetBase(array(
+        'form'      => $this,
+        'required' => $this->validatorSchema['address']->getOption('required'),
+      ));
+    }
     
     if ( sfConfig::get('project_rp_list_country', false) )
     {

@@ -1,11 +1,11 @@
 $(document).ready(function(){
-  
+  /*
   if ( $('#contact_street_name').val() === '' && $('#contact_street_number').val() === '' ) {
     LI.lockAddress(false);
   } else {
     LI.lockAddress(true);
   }
-  
+  */
   var timeouts = [];
   $('.field.postalcode input').keyup(function(e){
     if ( $(this).val().length > 2 )
@@ -44,7 +44,7 @@ $(document).ready(function(){
                 
                 $('.field.postalcode input').val(match[2]);
                 $('.field.city input').val(match[1]);
-                
+                /*
                 // has streets ?
                 if ( match[3] > 0 ) {
                   LI.lockAddress(true);
@@ -52,6 +52,7 @@ $(document).ready(function(){
                 } else {
                   LI.lockAddress(false);
                 }
+                */
               }
             }).parent().change();
             
