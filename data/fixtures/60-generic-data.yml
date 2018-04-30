@@ -49,10 +49,22 @@ OrganismCategory:
     name: Association culturelle
 
 MetaEvent:
-  season:
-    name: Saison
-  festival:
-    name: Festival
+  -
+    hide_in_month_calendars: true
+    slug: saison
+    Translation:
+      fr:
+        name: Saison
+        description: ''
+        lang: fr
+  -
+    hide_in_month_calendars: true
+    slug: festival
+    Translation:
+      fr:
+        name: Festival
+        description: ''
+        lang: fr
 
 EventCategory:
   concert:
@@ -82,27 +94,48 @@ Workspace:
   generic:
     name: Générique
 Price:
-  normal:
-    name: TN
-    description: Tarif Normal
-    online: true
+  -
+    id: 1
     value: 6
+    online: true
     Workspaces: [generic]
-  reduced:
-    name: TR
-    description: Tarif Réduit
+    Translation:
+      fr:
+        id: 1
+        name: 'TN'
+        description: 'Tarif Normal'
+        lang: fr
+  -
+    id: 2
     value: 3
     Workspaces: [generic]
-  exo:
-    name: EXO
-    description: Exonéré
+    Translation:
+      fr:
+        id: 2
+        name: 'TR'
+        description: 'Tarif Réduit'
+        lang: fr
+  -
+    id: 3
     value: 0
     Workspaces: [generic]
-  group:
-    name: TG
-    description: Tarif Groupes
+    Translation:
+      fr:
+        id: 3
+        name: 'EXO'
+        description: 'Exonéré'
+        lang: fr
+  -
+    id: 4
     value: 5
     Workspaces: [generic]
+    Translation:
+      fr:
+        id: 4
+        name: 'TG'
+        description: 'Tarif Groupes'
+        lang: fr
+
 
 Color:
   blue:
