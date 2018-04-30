@@ -57,20 +57,20 @@ class ProfessionalTable extends PluginProfessionalTable
     if ( !sfContext::hasInstance() )
       return $q;
     
-    $prepare = array();
-    foreach ( array_keys(sfContext::getInstance()->getUser()->getMetaEventsCredentials()) as $id )
-      $prepare[] = '?';
-    
+    $sf_user = sfContext::getInstance()->getUser();
+    $meids = array_keys($sf_user->getMetaEventsCredentials());
+        
     return $q
       ->leftJoin('gce.Transaction gt')
       ->leftJoin('gt.Translinked gtt')
       ->andWhere('gtt.id IS NULL')
       ->leftJoin('gce.Entry ge')
       ->leftJoin('ge.Event gevent')
-      ->andWhereIn('gevent.meta_event_id', array_keys(sfContext::getInstance()->getUser()->getMetaEventsCredentials()))
+      ->andWhereIn('gevent.meta_event_id', $meids)
       ->leftJoin('ge.ManifestationEntries gme')
       ->leftJoin('gme.Manifestation m')
-      ->leftJoin('m.Event e WITH e.meta_event_id IN ('.implode(',', array_keys(sfContext::getInstance()->getUser()->getMetaEventsCredentials())).')')
+      ->leftJoin('m.Event e')
+      ->andWhereIn('e.meta_event_id', $meids)
       ->leftJoin("$a.Groups g")
       ->leftJoin('g.Picture pic')
       ->leftJoin('gce.Entries gee ON gee.accepted = TRUE AND gee.contact_entry_id = gce.id')
