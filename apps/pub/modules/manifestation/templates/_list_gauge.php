@@ -11,6 +11,8 @@
 
   if ( $manifestation->sold_tickets + $manifestation->online_limit >= $gauges ) {
     $soldout = __('Sold Out');
+  } else {
+    $soldout = $gauges - $manifestation->online_limit - $manifestation->sold_tickets;
   }
 
   echo $soldout;
