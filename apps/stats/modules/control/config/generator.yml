@@ -23,7 +23,6 @@ generator:
             label: Create exceptions
         object_actions: []
         sort: [created_at, desc]
-        table_method: createQuery
       filter:
         display: [sf_guard_user_id, checkpoint_id, created_at]
       form:    ~
