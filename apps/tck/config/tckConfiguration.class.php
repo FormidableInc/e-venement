@@ -191,8 +191,7 @@ class tckConfiguration extends sfApplicationConfiguration
     });
     
     
-    // try to auto-integrate tickets if setted up
-    if ( sfConfig::get('app_tickets_auto_integrate', false) )
+    // Close transaction and try to auto-integrate tickets if setted up
     $this->addGarbageCollector('auto-integrate', function(){
       $section = 'Auto-integration';
       $this->stdout($section, 'Integrating what we can...', 'COMMAND');
@@ -211,13 +210,16 @@ class tckConfiguration extends sfApplicationConfiguration
       $cpt = $closed = 0;
       foreach ( $q->execute() as $transaction )
       {
-        $this->dispatcher->notify($event = new sfEvent($this, 'tck.before_trying_to_close_transaction', array(
-          'transaction' => $transaction,
-          'user'        => NULL,
-        )));
-        
+        if ( sfConfig::get('app_tickets_auto_integrate', false) )
+        {
+          $this->dispatcher->notify($event = new sfEvent($this, 'tck.before_trying_to_close_transaction', array(
+            'transaction' => $transaction,
+            'user'        => NULL,
+          )));
+        }
+          
         $semaphore = array('products' => true, 'amount' => 0);
-        foreach ( $items as $pdt )
+        foreach ( $transaction->getItemables() as $pdt )
         if ( !$pdt->isSold() )
         {
           $semaphore['products'] = false;
@@ -235,7 +237,7 @@ class tckConfiguration extends sfApplicationConfiguration
         try
         {
           $transaction->save();
-          if ( $event->getReturnValue() > 0 )
+          if ( $event && $event->getReturnValue() > 0 )
           {
             $cpt += $event->getReturnValue();
             $this->stdout($section, $event->getReturnValue().' itemables integrated for transaction #'.$transaction->id, 'DEBUG');
