@@ -26,6 +26,8 @@ RUN echo "phar.readonly = Off" >> /etc/php/${PHPVER}/cli/conf.d/42-phar-readonly
     && echo "memory_limit=-1" >> /etc/php/${PHPVER}/cli/conf.d/42-memory-limit.ini \
     && echo "date.timezone=Europe/Paris" >>  /etc/php/${PHPVER}/cli/conf.d/68-date-timezone.ini
 
+RUN mkdir -p /data/Repository && chown www-data:www-data /data/Repository
+
 ENV HOME=/home/jenkins
 ENV USER=jenkins
 ENV GROUP=users
@@ -34,6 +36,7 @@ ENV GROUP=users
 ARG UID
 ARG GID
 RUN useradd -d $HOME -g ${GID} -u ${UID} -m $USER \
+    && usermod -a -G www-data ${USER} \
     && mkdir -p $HOME/bin \
     && chown -R $USER:$GROUP $HOME
 
