@@ -1,0 +1,90 @@
+pipeline {
+    agent {
+        dockerfile {
+            filename "etc/dockerfile.jenkins"
+            additionalBuildArgs '--build-arg UID=$(id -u) --build-arg GID=$(id -g)'
+            args '--network=ci.network'
+        }
+    }
+
+    options {
+        timeout(time: 1, unit: 'HOURS')
+        timestamps()
+        disableConcurrentBuilds()
+        ansiColor('xterm')
+    }
+
+    stages {
+    	stage ('Where Am I') {
+            steps {
+                sh "uname -a"
+                sh "php -v"
+            }
+        }
+
+        stage ('Set Env') {
+            steps {
+                sh './bin/ci-scripts/set_env_with_etcd.sh'
+                sh './bin/ci-scripts/set_pgpass_test.sh'
+                sh 'cat ./.env'
+                sh 'cat $HOME/.pgpass'
+                sh 'cat config/databases.yml'
+            }
+        }
+
+        stage ('Get Sub Module') {
+            steps {
+                sh "./bin/ci-scripts/do_run.sh submodule_init.sh"
+            }
+        }
+
+        stage ('Create Config From Template') {
+            steps {
+                sh "./bin/ci-scripts/do_run.sh init_config.sh"
+            }
+        }
+
+         stage ('Create Database') {
+            steps {
+                sh "./bin/ci-scripts/do_run.sh create_database_test.sh"
+                sh "./bin/ci-scripts/do_run.sh create_table_test.sh"
+            }
+        }
+
+        stage ('Create Database Structure') {
+            steps {
+                sh "./bin/ci-scripts/do_run.sh install_db_test.sh"
+            }
+        }
+
+        stage ('Load Fixture') {
+            steps {
+                sh "./bin/ci-scripts/do_run.sh load_fixture_test.sh"
+            }
+        }
+
+        stage ('Try Cache Clear') {
+            steps {
+                sh "./symfony cc"
+            }
+        }
+
+        stage ('Archive Gzip') {
+            steps {
+                sh 'Branch="${BRANCH_NAME}" ./bin/ci-scripts/do_run.sh gen_archive.sh'
+                archiveArtifacts artifacts: "*.tar.gz*", fingerprint: true
+            }
+        }
+
+    }
+
+    post {
+        always {
+            cleanWs()
+        }
+
+        success {
+            build job: 'Copy Artifact', parameters: [string(name: 'Job', value: "${JOB_NAME}"), string(name: 'Project', value: "E-venement"), string(name: 'Branch', value: "${BRANCH_NAME}"), string(name: 'DoDeploy', value: "true")], wait: false
+        }
+    }
+}
