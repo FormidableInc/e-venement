@@ -3,7 +3,7 @@ pipeline {
         dockerfile {
             filename "etc/dockerfile.jenkins"
             additionalBuildArgs '--build-arg UID=$(id -u) --build-arg GID=$(id -g)'
-            args '--network=ci.network'
+            args '--network=ci.network --volume ${LIREPOPATH}:${LIREPOPATH}'
         }
     }
 
@@ -42,14 +42,9 @@ pipeline {
         stage ('Archive Gzip') {
             steps {
                 sh 'Branch="${BRANCH_NAME}" ./bin/ci-scripts/do_run.sh gen_archive.sh'
-                archiveArtifacts artifacts: "*.tar.gz*", fingerprint: true
-            }
-        }
-
-        /* we do not deploy on copy because we want to check if deploy work well */
-        stage ('Copy Artifact') {
-            steps {
-                build job: 'Copy Artifact', parameters: [string(name: 'Job', value: "${JOB_NAME}"), string(name: 'Project', value: "E-venement"), string(name: 'Branch', value: "${BRANCH_NAME}"), string(name: 'DoDeploy', value: "false")], wait: true
+                /* we can't use Jenkins Copy Jobs because it need generated artifact from current job which is not finish (so artifact is not published yet)... */
+                sh  "sg www-data 'mkdir -p  ${LIREPOPATH}/public/E-venement/'"
+                sh  "sg www-data 'cp -r *.tar.gz*  ${LIREPOPATH}/public/E-venement/'"
             }
         }
 
