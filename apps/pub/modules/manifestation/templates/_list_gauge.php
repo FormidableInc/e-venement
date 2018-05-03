@@ -12,7 +12,8 @@
   if ( $manifestation->sold_tickets + $manifestation->online_limit >= $gauges ) {
     $soldout = __('Sold Out');
   } else {
-    $soldout = $gauges - $manifestation->online_limit - $manifestation->sold_tickets;
+    $seats = $gauges - $manifestation->online_limit - $manifestation->sold_tickets;
+    $soldout = format_number_choice('[1]%%SEATS%% available seat|(1,+Inf]%%SEATS%% available seats', array('%%SEATS%%' => $seats), $seats);
   }
 
   echo $soldout;

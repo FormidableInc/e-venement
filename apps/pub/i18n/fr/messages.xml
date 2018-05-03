@@ -1106,6 +1106,10 @@ ou bien suivez ce lien&nbsp;:&lt;br/&gt;
         <source>Sold Out</source>
         <target>Complet</target>
       </trans-unit>
+      <trans-unit id="275">
+        <source>[1]%%SEATS%% available seat|(1,+Inf]%%SEATS%% available seats</source>
+        <target>[1]Reste %%SEATS%% place|(1,+Inf]Reste %%SEATS%% places</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
