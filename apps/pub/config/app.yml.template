@@ -172,6 +172,10 @@ all:
     #seated_plan_loading:
     #terms_conditions: CGV
     #email_footer: ""
+    custom_header: |
+      <script>
+        // Any custom script
+      </script>
     email_confirmation: |
 
       Voici le récapitulatif de votre commande en date du %%DATE%% :

@@ -13,6 +13,7 @@
     <?php include_component('layout', 'stylesheets') ?>
     <?php include_javascripts() ?>
     <script type="text/javascript" src="/js/translations/pub-<?php echo $sf_user->getCulture() ?>.js?<?php echo date('Ymd') ?>"></script>
+    <?php echo pubConfiguration::getText('app_texts_custom_header'); ?>
   </head>
   <body class="<?php include_partial('global/body_classes') ?>">
     <?php include_component('layout', 'layoutSwitcher') ?>
