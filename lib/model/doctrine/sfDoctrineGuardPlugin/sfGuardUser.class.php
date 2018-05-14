@@ -40,12 +40,20 @@ class sfGuardUser extends PluginsfGuardUser
     
     if ( sfContext::hasInstance() && in_array('liOnlineSalesPlugin', sfContext::getInstance()->getConfiguration()->getPlugins()) )
     {
-      $osApp = Doctrine::getTable('OsApplication')->findOneByIdentifier($this->username);
+      $osApp = Doctrine::getTable('OsApplication')->findOneByUserId($this->id);
       
-      if ( $osApp && $osApp->secret != $this->password )
+      if ( $osApp )
       {
-        $osApp->secret = $this->password;
-        $osApp->save();
+        if ( $osApp->secret != $this->password )
+        {
+          $osApp->secret = $this->password;
+          $osApp->save();
+        }
+        if ( $osApp->identifier != $this->username )
+        {
+          $osApp->identifier = $this->username;
+          $osApp->save();
+        }
       }
     }
   }
