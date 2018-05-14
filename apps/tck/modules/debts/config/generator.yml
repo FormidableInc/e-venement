@@ -14,25 +14,26 @@ generator:
     config:
       actions: ~
       fields:
-        all: { label: "Even closed transactions ?", help: "Needs a while for calculation..." }
-        date: { type: date }
+        all: { label: "Even closed transactions ?" }
+        date: { label: "Created at", type: date }
         User: { label: "Last user" }
       list:
         title: Debts
-        display: [_id, _invoice_id, Contact, Professional, _debt, closed, updated_at, User]
+        display: [_id, _invoice_id, _contact, _professional, _debt, _created_at, _updated_at, _user]
         actions:
-          _new: ~
           _extract:
             action: 'index#csv'
             ui-icon: document
         object_actions:
           _show: ~
         batch_actions: []
-        table_method: retrieveDebtsList
+        table_method: findDebts #retrieveDebtsList
+        table_count_method: findDebtsCount
         sort: [updated_at, desc]
         max_per_page: 500
+        pager_class: liCustomPager
       filter:
-        display: [created_by, date, all, name, city, contact_id, organism_id]
+        display: [created_by, date, all]
         class: DebtsFormFilter
       form:    ~
       edit:    ~

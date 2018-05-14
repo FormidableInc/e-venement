@@ -1,1 +1,1 @@
-#<?php echo link_to($transaction->id,'transaction/edit?id='.$transaction->id) ?>
+#<?php echo link_to($transaction['tid'], 'transaction/edit?id=' . $transaction['tid']) ?>

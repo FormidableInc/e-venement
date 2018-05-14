@@ -1,0 +1,1 @@
+<?php echo false !== strtotime($transaction['created_at']) ? format_date($transaction['created_at'], "f") : '&nbsp;' ?>

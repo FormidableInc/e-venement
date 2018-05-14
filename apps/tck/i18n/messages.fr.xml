@@ -666,7 +666,7 @@
       </trans-unit>
       <trans-unit id="165">
         <source>Even closed transactions ?</source>
-        <target>Même les opérations verrouillées ?</target>
+        <target>Opérations verrouillées comprises</target>
       </trans-unit>
       <trans-unit id="166">
         <source>Needs a while for calculation...</source>

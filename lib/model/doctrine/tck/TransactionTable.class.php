@@ -40,6 +40,30 @@ class TransactionTable extends PluginTransactionTable
         return Doctrine_Core::getTable('Transaction');
     }
   
+  protected function prepareQuery($q, $params)
+  {
+    $logger = sfContext::getInstance()->getLogger();
+
+    $logger->warning("\n" . $q . "\n\n--" . implode(', ', $params));
+
+    $pdo = Doctrine_Manager::getInstance()->getCurrentConnection()->getDbh();
+    
+    $st = $pdo->prepare($q);    
+    $st->execute($params);
+
+    return $st;
+  }
+
+  protected function getSingleResult($q, $params)
+  {
+    return $this->prepareQuery($q, $params)->fetchColumn();
+  }
+
+  protected function getResult($q, $params)
+  {
+    return $this->prepareQuery($q, $params)->fetchAll(Doctrine_Core::FETCH_ASSOC);
+  }
+  
   // $tickets can be NULL (all), 'asked' for asked tickets or an other not-empty-string for printed/integrated/cancelling tickets
   public function createQuery($alias = 't', $tickets = NULL, $with_products = false)
   {
@@ -113,6 +137,175 @@ class TransactionTable extends PluginTransactionTable
     return $this->fetchOneById($id);
   }
   
+  public function addCreated_byFilter($filters, &$params)
+  {
+    $created_by = '';
+
+    if ( array_key_exists('created_by', $filters) && $filters['created_by'] )
+    {
+      $created_by = " AND tv.sf_guard_user_id = ?";
+      $params[] = $filters['created_by'];
+    }
+
+    return $created_by;
+  }
+
+  public function addCreated_atFilter($filters, &$params)
+  {
+    $created_at = '';
+
+    if ( array_key_exists('date', $filters) )
+    {
+      $dates = $filters['date'];
+
+      if ( array_key_exists('from', $dates) && $dates['from'] )
+      {
+        $created_at .= " AND t.created_at >= ?";
+        $params[] = $dates['from'];
+      }
+
+      if ( array_key_exists('to', $dates) && $dates['to'] )
+      {
+        $created_at .= " AND t.created_at < ?";
+        $params[] = $dates['to'];
+      }
+    }
+
+    return $created_at;
+  }
+
+  public function addDomainFilter($filters = [], &$params)
+  {
+    $domain = '';
+    $dom = sfConfig::get('project_internals_users_domain', false);
+
+    if ( $dom )
+    {
+      $domain = " AND d.name = ?";
+      $params[] = $dom;
+    }
+
+    return $domain;
+  }
+
+  public function addClosedFilter($filters = [], &$params)
+  {
+    $closed = ' AND (t.closed = false';
+
+    if ( array_key_exists('all', $filters) && $filters['all'] )
+    {
+      $closed .= ' OR t.closed = true';
+    }
+
+    return $closed . ')';
+  }
+
+  public function getDebtsQuery($filters = [], &$params)
+  {
+    $filters_query = '';
+    $filters_query .= $this->addClosedFilter($filters, $params);
+    $filters_query .= $this->addCreated_byFilter($filters, $params);
+    $filters_query .= $this->addCreated_atFilter($filters, $params);
+    $filters_query .= $this->addDomainFilter($filters, $params);
+    
+    $q = "SELECT domain, tid, last_user, created_at, updated_at, invoice, contact, organism, outcomes, incomes, outcomes - incomes AS day_debt
+      FROM (
+        SELECT 
+          periods.domain, tid, last_user, created_at, updated_at, invoice, contact, organism,
+          coalesce(ticket_value, 0) + coalesce(product_value, 0) AS outcomes, 
+          coalesce(payment, 0) AS incomes
+        FROM (
+        
+          SELECT d.name AS domain, t.id AS tid, 
+            u.username||' ('||u.first_name||' '||u.last_name||')' AS last_user, 
+            i.id AS invoice, 
+            c.name||' '||c.firstname AS contact, 
+            o.name||' ('||o.city||')' AS organism, 
+            t.created_at,
+            t.updated_at
+          FROM transaction t
+          INNER JOIN transaction_version tv ON tv.id = t.id AND tv.version = 1
+          INNER JOIN domain d ON d.sf_guard_user_id = t.sf_guard_user_id
+          INNER JOIN sf_guard_user u ON u.id = t.sf_guard_user_id
+          LEFT JOIN contact c ON c.id = t.contact_id
+          LEFT JOIN professional p ON p.id = t.professional_id
+          LEFT JOIN organism o ON o.id = p.organism_id
+          LEFT JOIN invoice i ON i.transaction_id = t.id
+          WHERE t.transaction_id IS NULL
+          $filters_query
+              
+        ) AS periods
+        LEFT JOIN (
+          SELECT domain, transaction_id, sum(value) AS payment
+          FROM (
+            SELECT d.name AS domain, p.transaction_id, p.id, coalesce(p.value, 0) AS value
+            FROM payment p
+            INNER JOIN domain d ON d.sf_guard_user_id = p.sf_guard_user_id
+            UNION
+            SELECT d.name AS domain, t.transaction_id, p.id, coalesce(p.value, 0) AS value
+            FROM payment p
+            INNER JOIN domain d ON d.sf_guard_user_id = p.sf_guard_user_id
+            INNER JOIN transaction t ON t.id = p.transaction_id
+          ) AS p
+          GROUP BY domain, transaction_id
+        ) AS p ON p.transaction_id = tid AND p.domain = periods.domain
+        LEFT JOIN (
+          SELECT domain, transaction_id, sum(value + taxes) AS ticket_value
+          FROM (
+            SELECT d.name AS domain,
+              t.transaction_id, 
+              coalesce(t.value, 0) + coalesce(tc.value, 0) AS value, 
+              coalesce(t.taxes, 0) + coalesce(tc.taxes, 0) AS taxes
+            FROM ticket t
+            INNER JOIN transaction tr ON tr.id = t.transaction_id
+            INNER JOIN domain d ON d.sf_guard_user_id = t.sf_guard_user_id
+            LEFT JOIN ticket tc ON tc.cancelling = t.id
+            WHERE t.duplicating IS NULL
+            AND (t.printed_at IS NOT NULL OR t.integrated_at IS NOT NULL)
+          ) AS tickets
+          GROUP BY domain, transaction_id
+        ) AS t ON t.transaction_id = tid AND t.domain = periods.domain
+        LEFT JOIN (
+          SELECT d.name AS domain, bp.transaction_id, sum(value) AS product_value
+          FROM bought_product bp
+          INNER JOIN domain d ON d.sf_guard_user_id = bp.sf_guard_user_id
+          WHERE integrated_at IS NOT NULL
+          GROUP BY d.name, bp.transaction_id
+          ORDER BY bp.transaction_id
+        ) AS bp ON bp.transaction_id = tid AND bp.domain = periods.domain
+      ) AS debts
+      WHERE outcomes - incomes != 0
+      ORDER BY updated_at
+    ";
+
+    return $q;
+  }
+
+  public function findDebts($offset = -1, $limit = -1, $filters = [])
+  {
+    //throw new Exception(print_r($filters, true));
+    
+    $params = [];
+
+    $q = $this->getDebtsQuery($filters, $params) . "
+      OFFSET $offset
+      LIMIT $limit
+    ";
+
+    return $this->getResult($q, $params);
+  }
+  
+  public function findDebtsCount($filters = [])
+  {
+    $params = [];
+
+    $debts = $this->getDebtsQuery($filters, $params);
+
+    $q = "SELECT count(*) FROM ($debts) AS debts;";
+
+    return $this->getSingleResult($q, $params);
+  }
+
   public function retrieveDebtsList()
   {
     $q = Doctrine_Query::create()->from('Transaction t')
