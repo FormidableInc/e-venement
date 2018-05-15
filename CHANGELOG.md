@@ -1,3 +1,13 @@
+- v2.12.6 - 15/05/2018
+  - #6578 - Rewrite debts page
+  - #5831 - Add the number of available seats in the public manifestations page 
+  - #6311 - Add the possibility to inject code in the public pages header
+  - #6570 - Separate closing transaction from auto-integration
+  - #6013 - Remove the street validation in the public contact page
+  - #6558 - Add the creator name in the organism page
+  - #5966 - Optimize the display of controls list
+  - #6206 - Fix a bug when displaying the delete button on the user picture
+  - #6366 - Fix a bug in RP when a user has no meta-event
 - v2.12.5 - 25/04/2018
   - #6255 - Add the integration of tickets online
   - #6470 - Update region fixture
